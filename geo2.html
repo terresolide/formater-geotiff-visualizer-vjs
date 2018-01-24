@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.1.0/leaflet.css" />
+   <style>
+      .map {
+        height: 500px;
+        width: 100%;
+      }
+    </style>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.1.0/leaflet.js"></script>
+    <script src="dist/geotiff.browserify.js"></script>
+    <script src="lib/plotty.min.js"></script>
+    <script src="leaflet-geotiff/leaflet-geotiff.js"></script>
+    <title>GEOTIFF</title>
+  </head>
+  <body>
+    <h2>leaflet + geotiff + plotty + leaflet-geotiff</h2>
+    <div id="map" class="map"></div>
+    
+
+
+<script>
+ var center = [48.67777858405578, 2.166026472914382];
+var mymap = L.map('map').setView(center, 4);
+L.tileLayer('//server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', {
+    attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
+    maxZoom: 18,
+    id: 'mapbox.streets'
+}).addTo(mymap);
+  var geotiff= L.leafletGeotiff("ima_b1b2.tiff", { opacity:0.1, displayMin:2, displayMax:10, clampLow: false,  clampHigh:true,colorScale:"hsv", vector:false, band:1});
+  geotiff.addTo(mymap);
+
+</script>
+  </body>
+</html>
