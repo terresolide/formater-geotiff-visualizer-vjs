@@ -92,6 +92,7 @@ L.LeafletGeotiff = L.ImageOverlay.extend({
             var y_min = meta.ModelTiepoint[4];
             var y_max = y_min - meta.ModelPixelScale[1]*meta.ImageLength;
             this._rasterBounds = L.latLngBounds([[y_min,x_min],[y_max,x_max]]);
+            console.log( this._rasterBounds);
             this._reset()
         }
     },
