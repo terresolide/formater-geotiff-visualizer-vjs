@@ -29,9 +29,17 @@ L.tileLayer('//server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapSe
     maxZoom: 18,
     id: 'mapbox.streets'
 }).addTo(mymap);
-  var geotiff= L.leafletGeotiff("geo_TOT_20150718.unw.tiff", { opacity:0.1, displayMin:1, displayMax:10, clampLow:false,  clampHigh:true,colorScale:"rainbow", vector:false, band:0});
+  var geotiff= L.leafletGeotiff("geo_TOT_20150718.unw.tiff", { interactive:true, opacity:1, displayMin:1, displayMax:10, clampLow:false,  clampHigh:true,colorScale:"rainbow", vector:false, band:0});
   geotiff.addTo(mymap);
 
+  //click on map -> search elevation of point
+  geotiff.on('click',searchData);
+  function searchData(e){
+	  console.log(e.latlng);
+	  console.log(e);
+	  console.log( e.layer instanceof L.LeafletGeotiff);
+	  
+  }
 </script>
   </body>
 </html>

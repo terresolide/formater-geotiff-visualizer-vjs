@@ -83,7 +83,7 @@ L.LeafletGeotiff = L.ImageOverlay.extend({
             this.options.band = 0;
         }
         this.setBand(this.options.band);
-        console.log("ici");
+     
         if (!this.options.bounds) {
             var image = this.tiff.getImage(this.options.image);
             var meta = image.getFileDirectory();

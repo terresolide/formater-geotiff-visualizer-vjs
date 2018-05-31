@@ -1,0 +1,2 @@
+# Fix for IE7 & 8, hopefully not required in next version of OpenLayers
+Header set X-UA-Compatible "IE=EmulateIE7"
