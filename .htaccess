@@ -1,4 +1,4 @@
-<FilesMatch "\.(tiff)$">
+<FilesMatch "\.(tiff|png)$">
 <IfModule mod_headers.c>
     Header set Access-Control-Allow-Origin "*"
 </IfModule>
