@@ -1,0 +1,54 @@
+{
+  "name": "formater-geotiff-visualizer-vjs",
+  "version": "0.0.1",
+  "description": "geotiff visualizer component",
+  "preproduction": {
+    "url": "https://api.poleterresolide.fr/"
+  },
+  "production": {
+    "url": "https://cdn.rawgit.com/terresolide/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/terresolide/formater-geotiff-visualizer-vjs.git"
+  },
+  "keywords": [
+    "vue.js"
+  ],
+  "private": false,
+  "author": "epointal",
+  "license": "GNU",
+  "scripts": {
+    "dev": "cross-env NODE_ENV=development webpack-dev-server --progress --open --hot --inline",
+    "pre": "cross-env NODE_ENV=preproduction webpack --progress --hide-modules",
+    "build": "cross-env NODE_ENV=production webpack --progress --hide-modules"
+  },
+  "dependencies": {
+    "geotiff": "^0.4.1",
+    "highcharts": "^6.0.7",
+    "leaflet": "^1.3.1",
+    "leaflet-draw": "^0.4.14",
+    "plotty": "^0.2.0",
+    "vue": "^2.5.13",
+    "vue-custom-element": "^1.4.4",
+    "vue-i18n": "7.0.5",
+    "vue-resource": "^1.5.0"
+  },
+  "devDependencies": {
+    "@kazupon/vue-i18n-loader": "^0.3.0",
+    "babel-core": "^6.0.0",
+    "babel-loader": "^6.0.0",
+    "babel-preset-env": "^1.6.1",
+    "clean-webpack-plugin": "^0.1.19",
+    "cross-env": "^3.0.0",
+    "css-loader": "^0.25.0",
+    "exports-loader": "^0.6.4",
+    "file-loader": "^0.9.0",
+    "style-loader": "^0.18.2",
+    "uglifyjs-webpack-plugin": "^1.3.0",
+    "vue-loader": "^12.1.0",
+    "vue-template-compiler": "^2.5.13",
+    "webpack": "^2.6.1",
+    "webpack-dev-server": "^2.11.2"
+  }
+}

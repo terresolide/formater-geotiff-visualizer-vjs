@@ -2,34 +2,22 @@
 <html lang="en">
   <head>
   <meta charset="utf-8" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.1.0/leaflet.css" />
    <style>
-      .map {
-        height: 700px;
-        width: 100%;
-      }
     </style>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.1.0/leaflet.js"></script>
-   
-    <title>image layer</title>
+    <title>formater geotiff visualizer</title>
   </head>
   <body>
-    <h2>Image Layer</h2>
-    <div id="map" class="map"></div>
-    
+    <div style="width:80%;margin:auto;height:auto;">
+	<aeris-theme active="true" primary="#dd9946" emphasis="blue"></aeris-theme>
+   <geotiff-visualizer files="ima_b2.tiff" ></geotiff-visualizer>
+ <!--  -<formater-map id="test" metadataurl="http://api.formater/geotiff/mexico/info_ft2.json"></formater-map> -->
+	 
+	 </div>
+	<!--  <geotiff-visualizer></geotiff-visualizer> --> 
+	<!--  <formater-test></formater-test>-->
+    <!-- le fichier build est créé lorsqu'on lance la commande build -->
+    <aeris-theme active="false" primary="blue" emphasis="blue"></aeris-theme>
+	 <script src="dist/build.js"></script> 
 
-
-<script>
- var center = [40.75, -74.20];
-var mymap = L.map('map').setView(center, 10);
-L.tileLayer('//server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', {
-    attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
-    maxZoom: 18,
-    id: 'mapbox.streets'
-}).addTo(mymap);
-var imageUrl = 'https://api.poleterresolide.fr/geotiff/geo_TOT_20170108.unw.png',
-imageBounds = [[40.712216, -74.22655], [40.773941, -74.12544]];
-L.imageOverlay(imageUrl, imageBounds).addTo(mymap);
-</script>
   </body>
 </html>
