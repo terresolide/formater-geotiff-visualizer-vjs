@@ -1,0 +1,8 @@
+[ {
+    "smalltiff": "https://api.poleterresolide.fr/geotiff/abana/iw1/geo_filtSW_20180518-20180623_sd_4rlks_small.tif",
+    "bigtiff": "https://api.poleterresolide.fr/geotiff/abana/iw1/geo_filtSW_20180518-20180623_sd_4rlks.tif"
+  },
+  {
+    "smalltiff": "https://api.poleterresolide.fr/geotiff/abana/iw2/geo_filt_20180518-20180623_sd_4rlks_small.tif",
+    "bigtiff": "https://api.poleterresolide.fr/geotiff/abana/iw2/geo_filt_20180518-20180623_sd_4rlks.tif"
+}]
