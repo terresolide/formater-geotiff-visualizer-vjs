@@ -57,9 +57,13 @@ export default {
       type: Number,
       default: 200
     },
-    defaultRange: {
-      type: Object,
-      default: null
+    defaultmin: {
+      type: Number,
+      default: -80
+    },
+    defaultmax: {
+      type: Number,
+      default: 80
     },
     colorscale: {
       type: String,
@@ -71,7 +75,8 @@ export default {
     }
   },
   watch: {
-    defaultRange (newvalue, oldvalue) {
+    defaultmin (newvalue, oldvalue) {
+      console.log(newvalue)
       this.placeSliders()
     },
     colorscale (newvalue) {
@@ -125,11 +130,12 @@ export default {
 //       var rate = (this.barreWidth + 2) / (this.max - this.min)
 //       return rate
 //     },
-    // placeSliders when defaultRange change
+    // placeSliders when defaultrange change
     placeSliders () {
-      if (this.defaultRange) {
-        this.displayed.min = this.defaultRange.min
-        this.displayed.max = this.defaultRange.max
+      console.log(this.defaultrange)
+      if (this.defaultmin) {
+        this.displayed.min = this.defaultmin
+        this.displayed.max = this.defaultmax
       }
       this.middle = (this.max + this.min) / 2
       var begin = this.$el.querySelector('#begin-slider')
@@ -257,7 +263,6 @@ export default {
     },
     emitInput () {
     //  this.$emit('change', this.displayed)
-      console.log(this.displayed)
       this.$emit('change', {
         displayed: this.displayed,
         str: {
@@ -268,8 +273,9 @@ export default {
     },
     reset () {
       console.log('reset child')
-      console.log(this.defaultRange.min)
-      this.displayed = this.defaultRange
+      console.log(this.defaultmin)
+      this.displayed.min = this.defaultmin
+      this.displayed.max = this.defaultmax
       this.placeSliders()
     }
   }

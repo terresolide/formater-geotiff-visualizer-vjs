@@ -17,7 +17,7 @@ import AlertMessage from './elements/formater-alert-message.vue'
 import DoubleRange from './elements/formater-double-range.vue'
 
 // Add aeris-theme from other local repository!
-import AerisTheme from '../../aeris-commons-components-vjs/src/aeris-theme/aeris-theme.vue'
+// import AerisTheme from '../../aeris-commons-components-vjs/src/aeris-theme/aeris-theme.vue'
 
 Vue.filter('number', function (value) {
 	  if (value.toFixed) {

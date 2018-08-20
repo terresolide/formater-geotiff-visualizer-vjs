@@ -35,7 +35,9 @@
       "this_sub_swath_could_not_be_found": "The sub swath N°{num} could not be found",
       "loading_sub_swath": "Loading sub swath N°{num}",
       "sub_swath_loaded": "Sub swath N°{num} loaded",
-      "values_along_the_line": "Values along the line for the raster N°{raster}"
+      "values_along_the_line": "Values along the line for the raster N°{raster}",
+      "no_selected_file": "No selected file",
+      "files_list_not_found": "The file list was not found"
     },
     "fr": {
       "parameters_and_search": "Paramètres et recherche",
@@ -72,7 +74,9 @@
       "this_sub_swath_could_not_be_found": "La sous-fauchée N°{num} est introuvable",
       "loading_sub_swath": "Chargement de la sous-fauchée N°{num} en cours",
       "sub_swath_loaded": "Sous-fauchée N°{num} chargée",
-      "values_along_the_line": "Valeurs le long de la ligne pour la bande N°{raster}"
+      "values_along_the_line": "Valeurs le long de la ligne pour la bande N°{raster}",
+      "no_selected_file": "Aucun fichier sélectionné",
+      "files_list_not_found": "La liste des fichiers est introuvable"
     }
   }
 </i18n>
@@ -117,7 +121,7 @@
                   </div>
                   <div class="input-group">
                     <h4>{{$t('colorscale_optima')}}</h4>
-                    <formater-double-range ref="doubleRange" :lang="$i18n.locale" :disabled="disabled" :colorscale="colorScale" :width="250" :min="rangeScale.min" :max="rangeScale.max" :defaultRange="defaultRange" v-model="displayed" @change="changeMinMax"></formater-double-range>
+                    <formater-double-range ref="doubleRange" :lang="lang" :disabled="disabled" :colorscale="colorScale" :width="250" :min="rangeScale.min" :max="rangeScale.max"  :defaultmin="defaultRange.min" :defaultmax="defaultRange.max" @change="changeMinMax"></formater-double-range>
                   </div>
                   <div class="input-group">
                     <h4>{{$t('values_to_display')}}</h4>
@@ -192,7 +196,7 @@
                  </ul>
                  </div>
                  </div>
-                 <div class="input-group">
+                 <div class="input-group" v-if="dirurl">
                     <h4>Publication</h4>
                     <div>
                     <input type="button"  :value="$t('publish')" disabled="disabled">
@@ -200,7 +204,7 @@
                  </div>
               </div>
             </div>
-            <div class="form-group">
+            <div class="form-group" v-if="dirurl">
               <h3 :class="extend4 ? 'extend' : ''" @click="extend4 = !extend4">INFOS</h3>
                <div class="group-content">
                  <div class="input-group">
@@ -208,7 +212,7 @@
                  </div>
                  <div class="input-group">
                     <h4>Résultat</h4>
-                      <span class="blue" v-on:click="openWindow()"> {{this.urlResultat}}{{this.processToken}}</span>
+                      <span class="blue" v-on:click="openWindow()"> {{this.dirurl}}{{this.token}}</span>
                  </div>
               </div>
             </div>
@@ -253,7 +257,25 @@
   var Highcharts = require('highcharts')
 
   export default {
-    name: 'GeotiffViewer',
+    name: 'geotiff-visualizer',
+    props: {
+      lang: {
+        type: String,
+        default: 'en'
+      },
+      jsonurl: {
+        type: String,
+        default: null
+      },
+      token: {
+        type: String,
+        default: null
+      },
+      dirurl: {
+        type: String,
+        default: null
+      }
+    },
    // i18n: i18n,
 //     components: {
 //      // VueResource,
@@ -335,55 +357,27 @@
         showMarkers: true,
         minMaxMarkers: [],
         resetControl: null,
-        // pour créer une page indépendante de l'application
-        // files: []
-//         files: [ {
-//           'smalltiff': 'https://api.poleterresolide.fr/geotiff/abana/iw1/geo_filtSW_20180518-20180623_sd_4rlks_small.tif',
-//           'bigtiff': 'https://api.poleterresolide.fr/geotiff/abana/iw1/geo_filtSW_20180518-20180623_sd_4rlks.tif'
-//         },
-//         {
-//           'smalltiff': 'https://api.poleterresolide.fr/geotiff/abana/iw2/geo_filt_20180518-20180623_sd_4rlks_small.tif',
-//           'bigtiff': 'https://api.poleterresolide.fr/geotiff/abana/iw2/geo_filt_20180518-20180623_sd_4rlks.tif'
-//         }]
-        files: [ {
-          'smalltiff': 'https://api.poleterresolide.fr/geotiff/vatican/iw1/geo_filt_20180530-20180623_sd_4rlks_small.tif',
-          'bigtiff': 'https://api.poleterresolide.fr/geotiff/vatican/iw1/geo_filt_20180530-20180623_sd_4rlks.tif'
-        },
-        {
-          'smalltiff': 'https://api.poleterresolide.fr/geotiff/vatican/iw2/geo_filtSW_20180530-20180623_sd_4rlks_small.tif',
-          'bigtiff': 'https://api.poleterresolide.fr/geotiff/vatican/iw2/geo_filtSW_20180530-20180623_sd_4rlks.tif'
-        },
-        {
-          'smalltiff': 'https://api.poleterresolide.fr/geotiff/vatican/iw3/geo_filt_20180530-20180623_sd_4rlks_small.tif',
-          'bigtiff': 'https://api.poleterresolide.fr/geotiff/vatican/iw3/geo_filt_20180530-20180623_sd_4rlks.tif'
-        }]
+        files: []
       }
     },
+    created () {
+      this.$i18n.locale = this.lang
+    },
     mounted () {
-//       if (typeof this.$route.params.id !== 'undefined') {
-//         this.idProcess = this.$route.params.id
-//       }
-      this.$i18n.locale = 'fr'
-      console.log(this.$i18n.messages)
       var _this = this
-      // console.log(messages)
-      // this.$i18n.setLocaleMessage('fr', Object.assign(messages.fr, this.$i18n.messages.fr))
-     // this.$i18n.setLocaleMessage('en', messages.en)
       console.log('InterferoViewer mounted')
       this.initDefault()
       this.initMap()
       window.scrollTo(0, 350)
       this.resizeListener = this.handleResize.bind(this)
       window.addEventListener('resize', this.resizeListener)
-//       if (typeof this.$route.params.processToken !== 'undefined') {
-//         this.processToken = this.$route.params.processToken
-//         this.urlResultat = 'https://ist-etalab.u-ga.fr/etalab/data/' + this.processToken + '/'
-//         this.searchUrlTiffs()
-//      } else 
-	    if (this.files.length > 0) {
-        this.loadFiles()
+      if (this.token && this.dirurl) {
+        this.urlResultat = this.dirurl + this.processToken + '/'
+        this.searchUrlTiffs()
+     } else if (this.jsonurl) {
+        this.readList ()
       } else {
-        this.messages.push(this.$i18n.t('No selected processing'))
+        this.messages.push(this.$i18n.t('no_selected_file'))
         this.playing = false
       }
     },
@@ -589,7 +583,18 @@
           this.loadGeotiff(number, urls, numMessage - 1)
         }
       },
-      loadFiles () {
+      readList () {
+        console.log('read list')
+        console.log(this.jsonurl)
+         var _this = this
+        this.$http.get(this.jsonurl).then(
+            response => { _this.loadFiles(response) },
+            response => { _this.handleError(null, this.$i18n.t('files_list_not_found')) }
+          )
+      },
+      loadFiles (response) {
+        // read json that contains files list
+        this.files = response.body
         var _this = this
         this.ntiffs = this.files.length
         this.files.forEach(function (file, number) {
@@ -689,9 +694,13 @@
       toggleGeotiff (index, checked) {
         this.geotiffs[index].toggle(checked, this.opacity)
       },
+      chartWidth () {
+        return  this.$el.querySelector('#mapTiff').offsetWidth * 0.8 - 50
+      },
       createChart (layer) {
         this.hasChart = true
         var container = this.$el.querySelector('#chart')
+        var width = this.chartWidth()
         var series = []
         var _colors = this.graphColors
         var _this = this
@@ -723,8 +732,8 @@
         this.chart = Highcharts.chart(container, {
           chart: {
             height: 200,
-            marginBottom: 20
-            // width: width
+            marginBottom: 20,
+            width: width
           },
           credits: {
             enabled: false
@@ -849,14 +858,11 @@
         // this.geotiffs.setOpacity(this.opacity)
       },
       changeMinMax: function (event) {
-    	  console.log('-dans changeMinMax --')
-    	  console.log(event)
-    	  if (!event.displayed || !event.detail[0].displayed) {
-    		  return
-    	  }
-        this.displayed = event.displayed || event.detail[0].displayed
-        this.displayedToStr = event.str || event.detail[0].str
-        console.log(this.displayed.min)
+    	if (!event.detail[0] && !event.detail[0].displayed && (!event.detail[0].displayed.min || event.detail[0].displayed.min === null)) {
+    	  return
+    	}
+        this.displayed =  event.detail[0].displayed
+        this.displayedToStr =  event.detail[0].str
         var _this = this
         this.renderer.forEach(function (renderer) {
           renderer.setDisplayRange(_this.displayed.min, _this.displayed.max)
@@ -926,18 +932,20 @@
         this.closeGraph()
       },
       handleResize () {
-    	  var h = 0
-    	  if (document.querySelector('#menu')) {
+    	var h = 0
+    	if (document.querySelector('#menu')) {
           var h = document.querySelector('#menu').offsetHeight + 5
-    	  }
-        this.$el.querySelector('#content').style.height = (window.innerHeight - h) + 'px'
+    	} else {
+    	  var pos = this.$el.getBoundingClientRect()
+    	  var h = pos.top + 5
+    	}
+        this.$el.querySelector('#content').style.height = Math.max(window.innerHeight - h, 500) + 'px'
         if (this.map) {
           this.map.invalidateSize()
         }
         if (this.hasChart) {
-          var width = this.$el.querySelector('div > #chart').offsetWidth - 30
+          var width = this.chartWidth()
           var height = this.chart.height
-          console.log(height)
           this.chart.setSize(width, null, true)
         }
       },
@@ -1042,21 +1050,6 @@
           var ptMax = null
           var aux = null
           var optimaList = []
-    //         for (var i = 0; i < this.geotiffs.length; i++) {
-    //           aux = this.geotiffs[i].getMinMaxValues()
-    //           if (!optima) {
-    //             optima = Object.assign({list:[]},this.geotiffs[i].getMinMaxValues())
-    //             console.log(optima.min, optima.max, optima.average)
-    //           } else {
-    //             if (optima.min > aux.min) {
-    //               optima.min = aux.min
-    //             }
-    //             if (optima.max < aux.max) {
-    //               optima.max = aux.max
-    //             }
-    //           }
-    //           optima.list
-    //         }
           var map = this.map
           this.geotiffs.forEach(function (geotiff, index) {
             aux = geotiff.getMinMaxValues()
@@ -1120,28 +1113,6 @@
       openWindow: function () {
         window.open('https://ist-etalab.u-ga.fr/etalab/data/' + this.processToken)
       }
-//       playAlert () {
-//         if (this.alert.msg.length === 0) {
-//           this.stopAlert()
-//         } else {
-//           this.alert.count = this.alert.count + 1
-//           this.alert.html = this.alert.msg.join('<br />') + ' ' + '.'.repeat(this.alert.count % 4)
-//         }
-//       },
-//       startAlert () {
-//         var _this = this
-//         this.alert.count = 0
-//         this.alert.playing = setInterval(_this.playAlert, 800)
-//       },
-//       stopAlert () {
-//         clearInterval(this.alert.playing)
-//         this.alert = {
-//           playing: false,
-//           msg: '',
-//           html: '',
-//           count: 0
-//         }
-//       }
     }
   }
 </script>
@@ -1244,10 +1215,16 @@
   background:#e8e8e8;
   border: 1px dotted grey;
 }
+/** css for control reset **/
+#mapTiff .leaflet-reset {
+  cursor: pointer;
+}
+/** css for popup **/
 #mapTiff .formater-popup-item span.bullet{
    font-size: 20px;
    vertical-align:middle;
  }
+
 #mapTiff .markerIcon span{
   width: 2rem;
   height: 2rem;
@@ -1266,10 +1243,11 @@
  }
 </style>
 <style scoped>
- /* @import "../../node_modules/leaflet-draw/dist/leaflet.draw.css";
-  @import "../../node_modules/leaflet/dist/leaflet.css";
+/* @import "../node_modules/leaflet-draw/dist/leaflet.draw.css";
+ @import "../node_modules/leaflet/dist/leaflet.css";
  @import "./assets/css/fontello.css";*/
  #content{
+    font-family: 'Roboto', sans-serif;
     width: 100%;
     min-height:500px;
     display:block;
@@ -1480,5 +1458,90 @@
    margin: 0 5px;
    min-width: 130px;
  }
+  h1, h2 {
+    font-weight: normal;
+  }
+
+  ul {
+    list-style-type: none;
+    padding: 0;
+  }
+
+  li {
+    display: inline-block;
+    margin: 0 10px;
+  }
+
+  a {
+    color: #42b983;
+  }
+
+  body {
+    font-family: 'Roboto', sans-serif;
+  }
+
+
+
+  a.link {
+    color: #1c1c1c;
+    text-decoration: none;
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-weight: bold;
+    font-family: 'Roboto', sans-serif;
+  }
+
+  .link.router-link-active{
+    border-bottom: 2px solid orange;
+    padding-bottom: 15px;
+  }
+
+  .link{
+    #float: right;
+    border-bottom: none;
+    display: inline;
+    list-style: none;
+    margin: 10px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 1rem;
+    line-height: 1.6;
+    list-style-position: outside;
+    margin-bottom: 1.25rem;
+  }
+   button,
+ input[type="button"]{
+   display: inline-block;
+   margin: 0px 7px 3px 0;
+   padding: 3px 12px;
+   height: auto;
+   line-height: 1.43;
+   white-space: normal;
+   text-align: center;
+   background: #ececea;
+   border-width: 1px;
+   border-style: solid;
+   border-radius: 3px;
+   border-color: #ffffff #d4d4cf #d4d4cf;
+   color: #000;
+   text-decoration: none;
+  /* text-shadow: 0 -1px 1px #bcbcb4, 1px 0 1px #d4d4cf, 0 1px 1px #d4d4cf, -1px 0 1px #bcbcb4;*/
+   vertical-align: top;
+   cursor: pointer;
+   pointer-events: auto;
+   box-sizing: border-box;
+   box-shadow: 0 1px 5px rgba(0, 0, 0, 0.65);
+  }
+  button:hover,
+  input[type="button"]:hover{
+   background: #f0f0e6;
+   text-decoration: none;
+ }
+  button:disabled,
+  input[type="button"]:disabled{
+    color: #999;
+    pointer-events: none;
+  }
  
 </style>
