@@ -245,7 +245,7 @@
  // import FormaterDoubleRange from './elements/formater-double-range'
  // import FormaterAlertMessage from './elements/formater-alert-message'
   require('leaflet-draw')
-  L.drawLocal = require('./module/leaflet.draw.js')
+
 
   var plotty = require('plotty')
 
@@ -371,6 +371,9 @@
     },
     created () {
       this.$i18n.locale = this.lang
+      if (this.lang === 'fr') {
+        L.drawLocal = require('./module/leaflet.draw.fr.js')
+      } 
     },
     mounted () {
       var _this = this
