@@ -13,6 +13,7 @@ import VueResource from 'vue-resource'
 Vue.use(VueResource);
 
 import GeotiffVisualizer from './formater-geotiff-visualizer.vue'
+import FormaterAttribution from './formater-attribution.vue'
 import AlertMessage from './elements/formater-alert-message.vue'
 import DoubleRange from './elements/formater-double-range.vue'
 
@@ -35,9 +36,6 @@ ljs.addAliases({
        // leaflet draw
        //---------------
        'https://api.poleterresolide.fr/lib/leaflet.draw/leaflet.draw.css',
-       // fontello
-       //---------
-       'https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css',
        //regiter element
        //-------------
        'https://cdnjs.cloudflare.com/ajax/libs/document-register-element/1.4.1/document-register-element.js',
@@ -46,6 +44,7 @@ ljs.addAliases({
       ]
 })
 ljs.load('dep', function() {
+  Vue.customElement('formater-attribution', FormaterAttribution)
   Vue.customElement('formater-alert-message', AlertMessage)
   Vue.customElement('formater-double-range', DoubleRange)
   Vue.customElement('geotiff-visualizer', GeotiffVisualizer)

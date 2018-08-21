@@ -12,8 +12,28 @@ L.Control.ListControl = L.Control.extend({
     autoZIndex: true
   },
   _color: '#000',
+  defaultLang: 'en',
+  translation: {
+    subswath: {
+      'fr': 'Sous-fauchée',
+      'en': 'Subswath'
+    },
+    alt: {
+      'fr': 'Liste des sous-fauchées',
+      'en': 'Subswath list'
+    },
+    title: {
+      'fr': 'Liste',
+      'en': 'List'
+    }
+  },
   initialize: function (env, options) {
     this._env = env
+    if (['fr', 'en'].indexOf(env.lang) > -1) {
+      this.lang = env.lang
+    } else {
+      this.lang = this.defaultLang
+    }
     L.Control.prototype.initialize.call(options)
     this._initList()
   },
@@ -36,10 +56,10 @@ L.Control.ListControl = L.Control.extend({
       var h4 = L.DomUtil.create('h4', '', container)
       var link = L.DomUtil.create('a', className + '-toggle', h4)
       link.href = '#'
-      link.title = 'Liste des sous fauchées'
+      link.title = this.translation.alt[this.lang]
       link.innerHTML = '&#9776;'
       var span = L.DomUtil.create('span', '', h4)
-      span.innerHTML = 'Liste'
+      span.innerHTML = this.translation.title[this.lang]
       L.DomEvent.on(link, 'click', this._toggle, this)
       container.append(h4)
     }
@@ -57,7 +77,7 @@ L.Control.ListControl = L.Control.extend({
     checkbox.type = 'checkbox'
     checkbox.checked = true
     var span = L.DomUtil.create('span', '', div)
-    span.innerHTML = 'Sous-fauchée N°' + (index + 1)
+    span.innerHTML = this.translation.subswath[this.lang] + ' N°' + (index + 1)
     var _this = this
     L.DomEvent.on(div, 'mouseover', function () { _this._env.showSsfauche(index) }, div)
     L.DomEvent.on(div, 'mouseout', function () { _this._env.hideSsfauche(index) }, div)

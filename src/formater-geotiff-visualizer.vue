@@ -14,9 +14,9 @@
       "display_superior": "Display values greater than",
       "reset": "Reset",
       "search": "Search",
-       "overall_optima": "Minimum and maximum overall",
+      "overall_optima": "Minimum and maximum overall",
       "search_optima": "Search optima",
-      "sub_swath": "Sub swath",
+      "sub_swath": "Subswath",
       "view_in_map": "View minimum and maximum on the map",
       "profile": "profile",
       "click_on": "Click on",
@@ -30,14 +30,15 @@
       "publish": "Publish",
       "no_selected_processing": "No selected processing",
       "searching": "Searching",
-      "error_dir": "No sub swath found. <br />The directory has been deleted or it is unreachable",
-      "dir_reading": "Reading sub swath directory",
-      "this_sub_swath_could_not_be_found": "The sub swath N°{num} could not be found",
-      "loading_sub_swath": "Loading sub swath N°{num}",
-      "sub_swath_loaded": "Sub swath N°{num} loaded",
+      "error_dir": "No subswath found. <br />The directory has been deleted or it is unreachable",
+      "dir_reading": "Reading subswath directory",
+      "this_sub_swath_could_not_be_found": "The subswath N°{num} could not be found",
+      "loading_sub_swath": "Loading subswath N°{num}",
+      "sub_swath_loaded": "Subswath N°{num} loaded",
       "values_along_the_line": "Values along the line for the raster N°{raster}",
       "no_selected_file": "No selected file",
-      "files_list_not_found": "The file list was not found"
+      "files_list_not_found": "The file list was not found",
+      "component": "Component"
     },
     "fr": {
       "parameters_and_search": "Paramètres et recherche",
@@ -76,7 +77,8 @@
       "sub_swath_loaded": "Sous-fauchée N°{num} chargée",
       "values_along_the_line": "Valeurs le long de la ligne pour la bande N°{raster}",
       "no_selected_file": "Aucun fichier sélectionné",
-      "files_list_not_found": "La liste des fichiers est introuvable"
+      "files_list_not_found": "La liste des fichiers est introuvable",
+      "component": "Composant"
     }
   }
 </i18n>
@@ -92,7 +94,9 @@
             <div v-html="alert.html"></div>
           </div>
       </div> -->
-      <div id="form" >
+      <div id="form"  style="position:relative;">
+       <formater-attribution :lang="lang" :name="$t('component')" color="#000000" linkcolor="#8c0209" position="BL" url="https://github.com/terresolide/formater-geotiff-visualizer-vjs" v-if="attribution"></formater-attribution>
+      <div class="form-content">
       <h2>{{$t('parameters_and_search')}}</h2>
         <div id="search" :class="disabled ? 'disabled' : ''">
           <div class="form-group">
@@ -217,6 +221,7 @@
               </div>
             </div>
           </div>
+       </div>
       </div>
       <div id="mapTiff">
         <div class="map" @mouseover="hideMarker"></div>
@@ -274,6 +279,10 @@
       dirurl: {
         type: String,
         default: null
+      },
+      attribution: {
+        type: Boolean,
+        default: true
       }
     },
    // i18n: i18n,
@@ -584,9 +593,7 @@
         }
       },
       readList () {
-        console.log('read list')
-        console.log(this.jsonurl)
-         var _this = this
+        var _this = this
         this.$http.get(this.jsonurl).then(
             response => { _this.loadFiles(response) },
             response => { _this.handleError(null, this.$i18n.t('files_list_not_found')) }
@@ -610,7 +617,7 @@
           this.changeOpacity()
           this.map.fitBounds(this.bounds)
           if (!this.resetControl) {
-            this.resetControl = new L.Control.ResetControl(this.bounds)
+            this.resetControl = new L.Control.ResetControl(this.bounds, this.lang)
             this.map.addControl(this.resetControl)
           } else {
             this.resetControl.setBounds(this.bounds)
@@ -1217,8 +1224,10 @@
 }
 /** css for control reset **/
 #mapTiff .leaflet-reset {
+  font-size: 24px;
   cursor: pointer;
 }
+
 /** css for popup **/
 #mapTiff .formater-popup-item span.bullet{
    font-size: 20px;
@@ -1260,7 +1269,7 @@
     text-transform: uppercase;
   }
  .geotiff-viewer #mapTiff {
-    margin-left:365px;
+    margin-left:385px;
     margin-right:10px;
     position:relative;
     height: 100%;
@@ -1277,12 +1286,15 @@
     width: 20%;
     background-color: #f0f0f0;
     float: left;
-    min-width:350px;
-    width: 350px;
+    min-width:360px;
+    width: 360px;
     height:100%;
-    padding:0px 5px 10px 10px;
+    padding:0px 5px 0px 10px;
     margin-left: 8px;
     overflow:hidden;
+  }
+  #form .form-content{
+    height: 95%;
   }
   #form h2 {
    border-bottom: 1px solid grey;
