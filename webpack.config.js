@@ -53,13 +53,21 @@ module.exports = {
           }]
       },
       {
-        test: /\.(png|jpg|gif|svg)$/,
-        loader: 'file-loader'
-// remove options remove warning https://github.com/webpack/loader-utils/issues/56
-//        options: {
-//          name: '[name].[ext]?[hash]'
-//        }
+      test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
+      loader: 'url-loader',
+      options: {
+        limit: 10000,
+        name: 'assets/img/[name].[hash:7].[ext]'
       }
+      }
+//      {
+//        test: /\.(png|jpg|gif|svg)$/,
+//        loader: 'file-loader'
+ // remove options remove warning https://github.com/webpack/loader-utils/issues/56
+ //       options: {
+ //         name: '/assets/images/[name].[ext]?[hash]'
+ //       }
+ //     }
     ]
   },
   resolve: {
@@ -82,6 +90,7 @@ if (process.env.NODE_ENV === 'development') {
 if (process.env.NODE_ENV === 'production') {
   module.exports.devtool = '#source-map';
   module.exports.output.publicPath = prodUrl;
+
   // http://vue-loader.vuejs.org/en/workflow/production.html
   module.exports.plugins = (module.exports.plugins || []).concat([
     new webpack.DefinePlugin({
@@ -94,7 +103,10 @@ if (process.env.NODE_ENV === 'production') {
         sourceMap: true
     }),
     new webpack.LoaderOptionsPlugin({
-      minimize: true
+      minimize: true,
+      options: {
+        assetsSubDirectory: 'assets/'
+      }
     })
   ])
 }
