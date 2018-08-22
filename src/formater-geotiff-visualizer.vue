@@ -1298,6 +1298,7 @@
   }
   #form .form-content{
     height: 95%;
+    overflow: hidden;
   }
   #form h2 {
    border-bottom: 1px solid grey;
