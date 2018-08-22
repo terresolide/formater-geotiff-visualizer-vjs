@@ -80,6 +80,7 @@ export default {
 </script>
 <style>
 .formater-attribution{
+    font-family: Roboto, sans-serif;
 	position:absolute;
 	/*bottom:2px;
 	right:5px;*/
@@ -87,10 +88,10 @@ export default {
 	min-width:150px;
 	color:white;
 	padding:2px;
-	height:12px;
+	height:14px;
 	display:inline-block;
-	font-size:.7em;
-	opacity:0.8;
+	font-size: 8px;
+    opacity: .8;
 }
 .formater-attribution a,
 .formater-attribution a:active,
