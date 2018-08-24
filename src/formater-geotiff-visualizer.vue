@@ -262,7 +262,7 @@
   var Highcharts = require('highcharts')
 
   export default {
-    name: 'geotiff-visualizer',
+    name: 'GeotiffVisualizer',
     props: {
       lang: {
         type: String,
@@ -274,7 +274,7 @@
       },
       token: {
         type: String,
-        default: null
+        default: '95dfc275-bb03-450c-8a31-370cf7bd5c8a'
       },
       dirurl: {
         type: String,
@@ -366,9 +366,16 @@
         showMarkers: true,
         minMaxMarkers: [],
         resetControl: null,
-        files: []
+        files: [],
+        token: '95dfc275-bb03-450c-8a31-370cf7bd5c8a'
       }
     },
+//     watch: {
+//       token (newvalue) {
+//         console.log(newvalue)
+//         this.processToken = newvalue
+//       }
+//     },
     created () {
       this.$i18n.locale = this.lang
       if (this.lang === 'fr') {
