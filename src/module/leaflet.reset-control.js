@@ -33,6 +33,12 @@ L.Control.ResetControl = L.Control.extend({
     setBounds: function (bounds) {
       this._bounds = bounds
     },
+    setLang (lang) {
+      if (['fr', 'en'].indexOf(lang) > -1) {
+        this.lang = lang
+        this._container.querySelector('a').setAttribute('title', this.title[this.lang])
+      }
+    },
     onAdd : function(map){
         var container = L.DomUtil.create('div', 'leaflet-bar leaflet-control leaflet-reset');
         var a = L.DomUtil.create('a')

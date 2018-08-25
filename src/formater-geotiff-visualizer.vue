@@ -86,7 +86,7 @@
   <div>
     <div id="content" class="geotiff-viewer">
     <!-- avant formater alert -->
-      <formater-alert-message ref="alert" :msg="JSON.stringify(messages)" :playing="playing"></formater-alert-message>
+      <formater-alert-message ref="alert" :msg="JSON.stringify(messages)" :playing="playing" :lang="lang"></formater-alert-message>
       <!-- après formater -->
       <!--  <div id="alert" v-show="alert.msg.length > 0">
           <div>
@@ -95,7 +95,7 @@
           </div>
       </div> -->
       <div id="form"  style="position:relative;">
-       <formater-attribution :lang="lang" :name="$t('component')" color="#000000" linkcolor="#8c0209" position="BL" url="https://github.com/terresolide/formater-geotiff-visualizer-vjs" v-if="attribution"></formater-attribution>
+       <formater-attribution :lang="currentLang" :name="$t('component')" color="#000000" linkcolor="#8c0209" position="BL" url="https://github.com/terresolide/formater-geotiff-visualizer-vjs" v-if="attribution"></formater-attribution>
       <div class="form-content">
       <h2>{{$t('parameters_and_search')}}</h2>
         <div id="search" :class="disabled ? 'disabled' : ''">
@@ -125,7 +125,7 @@
                   </div>
                   <div class="input-group">
                     <h4>{{$t('colorscale_optima')}}</h4>
-                    <formater-double-range ref="doubleRange" :lang="lang" :disabled="disabled" :colorscale="colorScale" :width="250" :min="rangeScale.min" :max="rangeScale.max"  :defaultmin="defaultRange.min" :defaultmax="defaultRange.max" @change="changeMinMax"></formater-double-range>
+                    <formater-double-range ref="doubleRange" :lang="currentLang" :disabled="disabled" :colorscale="colorScale" :width="250" :min="rangeScale.min" :max="rangeScale.max"  :defaultmin="defaultRange.min" :defaultmax="defaultRange.max" @change="changeMinMax"></formater-double-range>
                   </div>
                   <div class="input-group">
                     <h4>{{$t('values_to_display')}}</h4>
@@ -242,8 +242,9 @@
 /* eslint no-unused-vars: "off" */
   let locale = navigator.language.substr(0, 2)
   var L = require('./module/leaflet.extends.js')
- // import FormaterDoubleRange from './elements/formater-double-range'
- // import FormaterAlertMessage from './elements/formater-alert-message'
+  import FormaterDoubleRange from './elements/formater-double-range.vue'
+  import FormaterAlertMessage from './elements/formater-alert-message.vue'
+  import FormaterAttribution from './elements/formater-attribution.vue'
   require('leaflet-draw')
 
 
@@ -263,6 +264,11 @@
 
   export default {
     name: 'geotiff-visualizer',
+    components: {
+      FormaterDoubleRange,
+      FormaterAlertMessage,
+      FormaterAttribution
+    },
     props: {
       lang: {
         type: String,
@@ -285,13 +291,6 @@
         default: true
       }
     },
-   // i18n: i18n,
-//     components: {
-//      // VueResource,
-//       // Datepicker,
-//       FormaterDoubleRange,
-//       FormaterAlertMessage
-//     },
     data () {
       return {
         extend0: false,
@@ -300,12 +299,6 @@
         extend3: false,
         extend4: false,
         disabled: true,
-//         alert: {
-//           msg: [],
-//           playing: false,
-//           html: ''
-//         },
-        // pour les messages
         messages: [],
         playing: false,
         map: null,
@@ -366,14 +359,19 @@
         showMarkers: true,
         minMaxMarkers: [],
         resetControl: null,
-        files: []
+        files: [],
+        currentLang: 'en',
+        languageChangeListener: null
       }
     },
     created () {
+    	this.currentLang = this.lang
       this.$i18n.locale = this.lang
       if (this.lang === 'fr') {
         L.drawLocal = require('./module/leaflet.draw.fr.js')
-      } 
+      }
+      this.languageChangeListener = this.changeLanguage.bind( this);
+      document.addEventListener('languageChange', this.languageChangeListener);
     },
     mounted () {
       var _this = this
@@ -408,6 +406,8 @@
         this.listControl.remove()
         this.listControl = null
       }
+      document.removeEventListener('languageChangeListener', this.changeLanguage);
+      this.languageChangeListener = null;
     },
     methods: {
       initDefault () {
@@ -854,6 +854,22 @@
         this.displayed = this.defaultRange
         this.displayedToStr = this.displayed
       },
+      changeLanguage (event) {
+    	  this.currentLang = event.detail
+    	  if (this.$i18n)
+    	  this.$i18n.locale = event.detail
+    	  if (this.resetControl) {
+    		  this.resetControl.setLang(event.detail)
+    	  }
+    	  if (this.listControl) {
+    		  this.listControl.setLang(event.detail)
+    	  }
+    	  if (this.currentLang === 'fr') {
+    	    L.drawLocal = require('./module/leaflet.draw.fr.js')
+    	  } else {
+    		  L.drawLocal = require('./module/leaflet.draw.en.js')
+    	  }
+      },
       changeColorScale: function () {
         var _this = this
         this.renderer.forEach(function (renderer) {
@@ -868,11 +884,11 @@
         // this.geotiffs.setOpacity(this.opacity)
       },
       changeMinMax: function (event) {
-    	if (!event.detail[0] && !event.detail[0].displayed && (!event.detail[0].displayed.min || event.detail[0].displayed.min === null)) {
-    	  return
-    	}
-        this.displayed =  event.detail[0].displayed
-        this.displayedToStr =  event.detail[0].str
+    	  if (!event.displayed && (!event.displayed.min || event.displayed.min === null)) {
+    	    return
+    	  }
+        this.displayed =  event.displayed
+        this.displayedToStr =  event.str
         var _this = this
         this.renderer.forEach(function (renderer) {
           renderer.setDisplayRange(_this.displayed.min, _this.displayed.max)
@@ -1298,6 +1314,7 @@
   }
   #form .form-content{
     height: 95%;
+    overflow: hidden;
   }
   #form h2 {
    border-bottom: 1px solid grey;

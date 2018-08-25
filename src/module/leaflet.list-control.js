@@ -40,15 +40,27 @@ L.Control.ListControl = L.Control.extend({
   onAdd: function (map) {
     return this._initLayout()
   },
-  setList (list) {
-    this.update(list)
-  },
+  setLang (lang) {
+      if (['fr', 'en'].indexOf(lang) > -1) {
+        this.lang = lang
+        this._initContent()
+        this._resetTitle()
+      }
+   },
   setColor (color) {
     this._container.querySelector('h4').style.background = color
     this._container.querySelector('h4 a').style.background = color
   },
+  _resetTitle () {
+	var h4 = this._container.querySelector('h4')
+    var link =  h4.querySelector('a')
+    var span = h4.querySelector('span')
+
+    link.title = this.translation.alt[this.lang]
+    span.innerHTML = this.translation.title[this.lang]
+  },
   _initLayout: function () {
-    var className = 'leaflet-bar leaflet-control leaflet-list'
+	var className = 'leaflet-bar leaflet-control leaflet-list'
     var container = L.DomUtil.create('div', className)
 
     // create collapse button
@@ -75,16 +87,22 @@ L.Control.ListControl = L.Control.extend({
     var div = L.DomUtil.create('div', 'leaflet-item')
     var checkbox = L.DomUtil.create('input', '', div)
     checkbox.type = 'checkbox'
-    checkbox.checked = true
+    checkbox.checked = this._list[index].checked
     var span = L.DomUtil.create('span', '', div)
     span.innerHTML = this.translation.subswath[this.lang] + ' N°' + (index + 1)
     var _this = this
     L.DomEvent.on(div, 'mouseover', function () { _this._env.showSsfauche(index) }, div)
     L.DomEvent.on(div, 'mouseout', function () { _this._env.hideSsfauche(index) }, div)
-    L.DomEvent.on(checkbox, 'click', function () { _this._env.toggleGeotiff(index, this.checked) }, checkbox)
+    L.DomEvent.on(checkbox, 'click', function () {
+      _this._list[index].checked = this.checked
+      _this._env.toggleGeotiff(index, this.checked)
+    }, checkbox)
     this._content.append(div)
   },
   _removeContent: function () {
+	if (typeof this._content === 'undefinde') {
+		return
+	}
     var nodes = this._content.querySelectorAll('div')
     nodes.forEach(function (div) {
       L.DomEvent.off(div, 'mouseover', function () { _this._env.showSsfauche(index) }, div)
@@ -94,7 +112,7 @@ L.Control.ListControl = L.Control.extend({
     })
     this._content.innerHTML = ''
   },
-  _initContent: function () {
+  _initContent () {
     this._removeContent()
     if (this._list.length === 0) {
       return null
@@ -125,12 +143,11 @@ L.Control.ListControl = L.Control.extend({
   _initList: function () {
     var list = []
     this._env.geotiffs.forEach(function (geotiff) {
-      list.push(geotiff.getURL())
+      list.push({ 'url': geotiff.getURL(), 'checked': true})
     })
     this._list = list
   },
   update: function () {
-    this._initList()
     this._initContent()
   }
 })

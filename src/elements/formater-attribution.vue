@@ -19,6 +19,7 @@
 </template>
 <script>
 export default {
+	name: 'FormaterAttribution',
   props:{
     name: {
       type: String,
@@ -47,6 +48,12 @@ export default {
   },
   created () {
 	  this.$i18n.locale = this.lang
+  },
+  watch: {
+	  lang (newvalue) {
+		  console.log(newvalue)
+		  this.$i18n.locale = this.lang
+	  }
   },
   mounted () {
 	  this.$el.style.color = this.color

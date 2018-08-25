@@ -7,20 +7,22 @@
      "synchronised_cursors": "Synchronised cursors"
    },
    "fr": {
-     "synchronised_cursors": "curseurs synchronisés HH"
+     "synchronised_cursors": "curseurs synchronisés"
    }
  }
  </i18n>
 <template>
- <span class="double-range" @mousemove="drag" :class="disabled ? 'disabled' : ''">
+ <span class="double-range" @mousemove="drag"  @mouseup="dragEnd" :class="disabled ? 'disabled' : ''">
    <div class="range-value range-min">{{valueToString(min)}}</div>
    <div class="range-value range-max">{{valueToString(max)}}</div>
+   <div class="wrap">
    <div class="barre">
        <canvas id="colorScaleLegend" width="256" height="1" ></canvas>
        <div id="begin-slider" class="range-slider"  @mousedown="dragStart"></div>
        <div class="step-value step-begin" v-show="displayed.min">{{valueToString(displayed.min)}}</div>
     <div id="end-slider" class="range-slider"  @mousedown="dragStart"></div>
     <div class="step-value step-end" v-show="displayed.max">{{valueToString(displayed.max)}}</div>
+   </div>
    </div>
    <div class="linked">
      <input type="checkbox" v-model="linkedCursors">
@@ -76,11 +78,13 @@ export default {
   },
   watch: {
     defaultmin (newvalue, oldvalue) {
-      console.log(newvalue)
       this.placeSliders()
     },
     colorscale (newvalue) {
       this.initColorScale()
+    },
+    lang (newvalue) {
+    	this.$i18n.locale = newvalue
     }
   },
   data () {
@@ -89,7 +93,6 @@ export default {
         min: null,
         max: null
       },
-      mouseupListener: null,
       selectedSlider: null,
       w0: 10,
       linkedCursors: true,
@@ -100,39 +103,23 @@ export default {
   },
   computed: {
     rate () {
-      return (this.barreWidth + 2) / (this.max - this.min)
+      return ((this.barreWidth ) + 2) / (this.max - this.min)
     }
   },
-  created () {
-    this.mouseupListener = this.dragEnd.bind(this)
-    document.addEventListener('mouseup', this.mouseupListener)
-  },
   mounted () {
-    console.log(this.lang)
-    console.log(this.$i18n)
     this.$i18n.locale = this.lang
     this.$el.querySelector('.barre').style.width = this.width + 'px'
     this.w0 = this.$el.querySelector('.range-slider').offsetWidth
-    this.barreWidth = this.width
+    this.barreWidth = this.width 
     this.placeSliders()
     this.initColorScale()
-  },
-  destroyed () {
-    document.removeEventListener('mouseup', this.mouseupListener)
-    this.mouseupListener = null
   },
   methods: {
     initColorScale () {
       var canvas = this.$el.querySelector('#colorScaleLegend')
       plotty.renderColorScaleToCanvas(this.colorscale, canvas)
     },
-//     rate () {
-//       var rate = (this.barreWidth + 2) / (this.max - this.min)
-//       return rate
-//     },
-    // placeSliders when defaultrange change
     placeSliders () {
-      console.log(this.defaultrange)
       if (this.defaultmin) {
         this.displayed.min = this.defaultmin
         this.displayed.max = this.defaultmax
@@ -141,7 +128,7 @@ export default {
       var begin = this.$el.querySelector('#begin-slider')
       var end = this.$el.querySelector('#end-slider')
       var inside = this.$el.querySelector('#colorScaleLegend')
-      this.posL = Math.round((this.displayed.min - this.min) * this.rate)
+      this.posL = Math.round((this.displayed.min - this.min) * this.rate) 
       begin.style.left = (this.posL - this.w0) + 'px'
       this.posR = Math.ceil((this.displayed.max - this.min) * this.rate)
       // ordre de grandeur du displayed.max, puissance de 10
@@ -272,8 +259,6 @@ export default {
       })
     },
     reset () {
-      console.log('reset child')
-      console.log(this.defaultmin)
       this.displayed.min = this.defaultmin
       this.displayed.max = this.defaultmax
       this.placeSliders()
@@ -285,11 +270,14 @@ export default {
 .double-range {
   display: inline-block;
 }
+.double-range .wrap{
+  margin-left:20px;
+   margin-right:20px;
+}
 .double-range .barre{
    position: relative;
-   margin-left:20px;
-   margin-right:20px;
-   padding: 12px 15px;
+   margin:0;
+   padding: 12px 0px;
    clear:both;
    opacity:1;
     /* Styles */
