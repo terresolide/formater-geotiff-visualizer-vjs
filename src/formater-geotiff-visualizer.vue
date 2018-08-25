@@ -263,7 +263,7 @@
   var Highcharts = require('highcharts')
 
   export default {
-    name: 'geotiff-visualizer',
+    name: 'GeotiffVisualizer',
     components: {
       FormaterDoubleRange,
       FormaterAlertMessage,
@@ -280,7 +280,7 @@
       },
       token: {
         type: String,
-        default: null
+        default: '95dfc275-bb03-450c-8a31-370cf7bd5c8a'
       },
       dirurl: {
         type: String,
@@ -364,6 +364,12 @@
         languageChangeListener: null
       }
     },
+//     watch: {
+//       token (newvalue) {
+//         console.log(newvalue)
+//         this.processToken = newvalue
+//       }
+//     },
     created () {
     	this.currentLang = this.lang
       this.$i18n.locale = this.lang
@@ -378,7 +384,6 @@
       console.log('InterferoViewer mounted')
       this.initDefault()
       this.initMap()
-      window.scrollTo(0, 350)
       this.resizeListener = this.handleResize.bind(this)
       window.addEventListener('resize', this.resizeListener)
       if (this.token && this.dirurl) {
@@ -1276,15 +1281,16 @@
  @import "./assets/css/fontello.css";*/
  #content{
     font-family: 'Roboto', sans-serif;
+
     width: 100%;
     min-height:500px;
     display:block;
   }
-  h2, h3 {
+  #form h2, #form h3 {
     text-transform: uppercase;
   }
-  h4::first-letter,
-  label::first-letter {
+  #form h4::first-letter,
+  #form label::first-letter {
     text-transform: uppercase;
   }
  .geotiff-viewer #mapTiff {
@@ -1308,19 +1314,30 @@
     min-width:360px;
     width: 360px;
     height:100%;
-    padding:0px 5px 0px 10px;
+    padding:0px;
     margin-left: 8px;
     overflow:hidden;
+    font-size:14px;
+    letter-spacing: .01em;
   }
   #form .form-content{
     height: 95%;
+<<<<<<< .mine
     overflow: hidden;
+
+
+=======
+    overflow: hidden;
+    padding:0;
+    margin:0;
+>>>>>>> .theirs
   }
   #form h2 {
    border-bottom: 1px solid grey;
-   margin: 0 -8px 0 -10px;
+   margin: 0;
    padding: 25px 0 20px 10px;
    box-shadow: 0px 1px 5px #888888;
+   font-size:22px;
   }
   #search{
    max-height:90%;
@@ -1332,7 +1349,7 @@
    margin-left: 20px;
   }
  .input-group{
-   margin: 20px 0 20px 5px;
+   margin: 20px 0 20px 15px;
    clear: both;
   }
  .input-group h4{
@@ -1575,5 +1592,6 @@
     color: #999;
     pointer-events: none;
   }
- 
+
+
 </style>
