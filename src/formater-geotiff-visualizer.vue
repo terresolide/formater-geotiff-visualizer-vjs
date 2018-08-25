@@ -1322,15 +1322,9 @@
   }
   #form .form-content{
     height: 95%;
-<<<<<<< .mine
-    overflow: hidden;
-
-
-=======
     overflow: hidden;
     padding:0;
     margin:0;
->>>>>>> .theirs
   }
   #form h2 {
    border-bottom: 1px solid grey;
@@ -1473,7 +1467,7 @@
    border-color: #ffffff #d4d4cf #d4d4cf;
    color: #000;
    text-decoration: none;
-   text-shadow: 0 -1px 1px #bcbcb4, 1px 0 1px #d4d4cf, 0 1px 1px #d4d4cf, -1px 0 1px #bcbcb4;
+   /* text-shadow: 0 -1px 1px #bcbcb4, 1px 0 1px #d4d4cf, 0 1px 1px #d4d4cf, -1px 0 1px #bcbcb4; */
    vertical-align: top;
    cursor: pointer;
    pointer-events: auto;
