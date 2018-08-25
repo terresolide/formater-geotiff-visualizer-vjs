@@ -1,6 +1,6 @@
 {
   "name": "formater-geotiff-visualizer-vjs",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "geotiff visualizer component",
   "preproduction": {
     "url": "https://api.poleterresolide.fr/"

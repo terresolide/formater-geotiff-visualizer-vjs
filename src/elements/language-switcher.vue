@@ -46,7 +46,8 @@ export default {
     }
   },
   created () {
-	  this.$i18n.locale = this.lang
+      console.log(this.lang)
+	  this.changeLanguage(this.lang)
   },
   destroyed () {
     console.log('destroyed')
@@ -54,7 +55,6 @@ export default {
   methods: {
     changeLanguage (key) {
       this.$i18n.locale = key
-      
       this.current = key
       var event = new CustomEvent('languageChange', {detail: key})
       document.dispatchEvent(event)
