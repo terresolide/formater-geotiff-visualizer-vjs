@@ -3,7 +3,7 @@ A webcomponent to visualize your geotiff file
 
 @inprogress
 
-![Screenshot](/images/screenshot1.png)
+![Screenshot](/images/screenshot2.png)
 
 
 
@@ -12,7 +12,7 @@ In the body page add the component and the script like this:
 
 ```
 <geotiff-visualizer jsonurl='url_to_json' lang="en"></geotiff-visualizer>
-<script src="https://cdn.rawgit.com/terresolide/formater-geotiff-visualizer-vjs/0.0.1/dist/formater-geotiff-visualizer-vjs.js"></script>
+<script src="https://cdn.rawgit.com/terresolide/formater-geotiff-visualizer-vjs/0.0.5/dist/formater-geotiff-visualizer-vjs.js"></script>
 ```
 Where 
  * `jsonurl` is a json file describing your geotiff list, REQUIRED (specifications @inprogress)
