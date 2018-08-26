@@ -364,12 +364,18 @@
         languageChangeListener: null
       }
     },
-//     watch: {
-//       token (newvalue) {
-//         console.log(newvalue)
-//         this.processToken = newvalue
-//       }
-//     },
+     watch: {
+       token (newvalue) {
+         console.log(newvalue)
+         if (newvalue && this.dirurl) {
+           this.urlResultat = this.dirurl + newvalue + '/'
+           this.searchUrlTiffs()
+         }
+       },
+       lang (newvalue) {
+         this.changeLanguage(newvalue)
+       }
+    },
     created () {
     	this.currentLang = this.lang
       this.$i18n.locale = this.lang
@@ -386,10 +392,12 @@
       this.initMap()
       this.resizeListener = this.handleResize.bind(this)
       window.addEventListener('resize', this.resizeListener)
+      console.log(this.token)
+      console.log(this.dirurl)
       if (this.token && this.dirurl) {
-        this.urlResultat = this.dirurl + this.processToken + '/'
+        this.urlResultat = this.dirurl + this.token + '/'
         this.searchUrlTiffs()
-     } else if (this.jsonurl) {
+      } else if (this.jsonurl) {
         this.readList ()
       } else {
         this.messages.push(this.$i18n.t('no_selected_file'))
@@ -862,7 +870,7 @@
       changeLanguage (event) {
     	  this.currentLang = event.detail
     	  if (this.$i18n)
-    	  this.$i18n.locale = event.detail
+    	    this.$i18n.locale = event.detail
     	  if (this.resetControl) {
     		  this.resetControl.setLang(event.detail)
     	  }
