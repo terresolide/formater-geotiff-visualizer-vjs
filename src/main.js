@@ -16,7 +16,7 @@ import GeotiffVisualizer from './formater-geotiff-visualizer.vue'
 // import FormaterAttribution from './formater-attribution.vue'
 // import AlertMessage from './elements/formater-alert-message.vue'
 // import DoubleRange from './elements/formater-double-range.vue'
-import LanguageSwitcher from './elements/language-switcher.vue'
+// import LanguageSwitcher from './elements/language-switcher.vue'
 
 // Add aeris-theme from other local repository!
 // import AerisTheme from '../../aeris-commons-components-vjs/src/aeris-theme/aeris-theme.vue'
@@ -50,6 +50,6 @@ ljs.load('dep', function() {
 //  Vue.customElement('formater-alert-message', AlertMessage)
 //  Vue.customElement('formater-double-range', DoubleRange)
   Vue.customElement('geotiff-visualizer', GeotiffVisualizer) 
-  Vue.customElement('language-switcher', LanguageSwitcher)
+ // Vue.customElement('language-switcher', LanguageSwitcher)
 })
 
