@@ -42,22 +42,35 @@ export default {
       languages: {
         fr: {name: 'français', img: require('../assets/images/fr.png')},
         en: {name: 'english', img: require('../assets/images/en.png')}
-      }
+      },
+      languageRequestListener: null
     }
   },
   created () {
-	  this.$i18n.locale = this.lang
+      if (this.lang === "MAIN") {
+        this.current = this.$i18n.locale
+      } else {
+          this.current = key
+          this.$i18n.locale = key
+	  this.changeLanguage(this.lang)
+      }
+      this.languageRequestListener = this.currentLanguage.bind(this)
+      document.addEventListener('languageRequest', this.languageRequestListener)
   },
   destroyed () {
     console.log('destroyed')
+    document.removeListener('languageRequest', this.languageRequestListener)
+    this.languageRequestListener = null
   },
   methods: {
+    currentLanguage () {
+      var event = new CustomEvent('languageChange', {detail: this.current})
+      document.dispatchEvent(event)
+    },
     changeLanguage (key) {
       this.$i18n.locale = key
-      
       this.current = key
-      var event = new CustomEvent('languageChange', {detail: key})
-      document.dispatchEvent(event)
+      this.currentLanguage()
       // emit event language change for DrawLocal
       // this.$emit('languageChange', key)
     }
