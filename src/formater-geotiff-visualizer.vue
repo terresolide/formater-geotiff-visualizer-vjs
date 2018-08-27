@@ -377,13 +377,15 @@
        }
     },
     created () {
-    	this.currentLang = this.lang
+      this.currentLang = this.lang
       this.$i18n.locale = this.lang
       if (this.lang === 'fr') {
         L.drawLocal = require('./module/leaflet.draw.fr.js')
       }
       this.languageChangeListener = this.changeLanguage.bind( this);
       document.addEventListener('languageChange', this.languageChangeListener);
+      var event = new CustomEvent('languageRequest')
+      document.dispatchEvent(event)
     },
     mounted () {
       var _this = this
