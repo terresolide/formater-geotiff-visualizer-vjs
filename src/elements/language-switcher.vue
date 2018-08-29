@@ -50,9 +50,7 @@ export default {
       if (this.lang === "MAIN") {
         this.current = this.$i18n.locale
       } else {
-          this.current = key
-          this.$i18n.locale = key
-	  this.changeLanguage(this.lang)
+	    this.changeLanguage(this.lang)
       }
       this.languageRequestListener = this.currentLanguage.bind(this)
       document.addEventListener('languageRequest', this.languageRequestListener)
