@@ -559,6 +559,7 @@
         this.playing = true
         this.tiffs = []
         var _this = this
+        this.ntiffs = 0
         this.$http.get(this.urlResultat).then(
           response => { _this.findListSousFauche(response) },
           response => { _this.handleError(null, this.$i18n.t('error_dir')) }
@@ -628,7 +629,11 @@
         })
       },
       afterLoad () {
-        if (this.geotiffs.length === this.ntiffs + this.nUnloadTiffs) {
+        var count = 0
+        this.geotiffs.forEach(function (geotiff) {
+          count++
+        })
+        if (count === this.ntiffs + this.nUnloadTiffs) {
           this.initRasters()
           this.initDoubleRange()
           this.disabled = false
@@ -690,8 +695,8 @@
         var _this = this
         this.geotiffs[ssfauche].once('load', function () {
           if (numMessage) {
-            _this.messages[numMessage] = _this.$i18n.t('sub_swath_loaded', {num: ssfauche + 1})
-          }
+            _this.changeMessage(numMessage, _this.$i18n.t('sub_swath_loaded', {num: ssfauche + 1}))
+           }
           _this.initGeotiff(ssfauche)
         })
 //         this.geotiffs[ssfauche].on('click', function () {
@@ -897,6 +902,13 @@
           geotiff.setOpacity(_this.opacity)
         })
         // this.geotiffs.setOpacity(this.opacity)
+      },
+      changeMessage (index, msg) {
+        // changement pas détecté par vuejs :
+        this.messages[index] = msg
+        // changements détectés !!!!:
+        this.messages.push('')
+        this.messages.pop()
       },
       changeMinMax: function (event) {
     	  if (!event.displayed && (!event.displayed.min || event.displayed.min === null)) {
