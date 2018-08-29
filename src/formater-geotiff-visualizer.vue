@@ -38,7 +38,9 @@
       "values_along_the_line": "Values along the line for the raster N°{raster}",
       "no_selected_file": "No selected file",
       "files_list_not_found": "The file list was not found",
-      "component": "Component"
+      "component": "Component",
+      "no_subswath": "No subswath found with this token",
+      "subswath_not_found": "subswath N° {num} not found"
     },
     "fr": {
       "parameters_and_search": "Paramètres et recherche",
@@ -78,7 +80,9 @@
       "values_along_the_line": "Valeurs le long de la ligne pour la bande N°{raster}",
       "no_selected_file": "Aucun fichier sélectionné",
       "files_list_not_found": "La liste des fichiers est introuvable",
-      "component": "Composant"
+      "component": "Composant",
+      "no_subswath": "Aucun sous-fauchée trouvée pour ce token",
+      "subswath_not_found": "Sous-fauchée N° {num} introuvable"
     }
   }
 </i18n>
@@ -156,7 +160,7 @@
                     <li><span class="label">Minimum</span>: {{(optima.min == null) ? '--' : optima.min | number}}</li>
                     <li><span class="label">Maximum</span>: {{(optima.max == null) ? '--' : optima.max | number}}</li>
                   </ul>
-                  <div class="formater-ssfauche-optima" v-if="optima.list" v-for="(value, index) in optima.list" @mouseover="showSsfauche(index)" @mouseout="hideSsfauche(index)">
+                  <div class="formater-ssfauche-optima" v-if="optima.list && typeof value !== 'undefined'" v-for="(value, index) in optima.list" @mouseover="showSsfauche(index)" @mouseout="hideSsfauche(index)">
                   <h5><span :style="'color: ' + graphColors[index] + ';'">&#9642;</span>{{$t('sub_swath')}} N°{{index + 1}}</h5>
                   <ul>
                     <li><span class="label">Minimum</span>: {{(value.min == null) ? '--' : value.min | number}}</li>
@@ -562,7 +566,7 @@
         this.ntiffs = 0
         this.$http.get(this.urlResultat).then(
           response => { _this.findListSousFauche(response) },
-          response => { _this.handleError(null, this.$i18n.t('error_dir')) }
+          response => { _this.handleError(null, _this.$i18n.t('error_dir')) }
         )
       },
       findListSousFauche (response) {
@@ -571,20 +575,25 @@
         var links = html.querySelectorAll('a')
         this.messages.push(this.$i18n.t('dir_reading'))
         var _this = this
+        console.log(links)
         links.forEach(function (link) {
-          var ssfauche = link.textContent.match(/iw([1-3])\//)
+        	console.log(link.href)
+          var ssfauche = link.getAttribute('href').match(/iw([1-3])\//)
           if (ssfauche) {
             _this.ntiffs += 1
             var url = _this.urlResultat + link.getAttribute('href')
             _this.searchSousFaucheTiff(parseInt(ssfauche[1] - 1), url)
           }
         })
+        if (this.ntiffs === 0) {
+        	this.handleError(null, this.$i18n.t('no_subswath'))
+        }
       },
       searchSousFaucheTiff (number, url) {
         var _this = this
         this.$http.get(url).then(
           response => { _this.findTiff(url, number, response) },
-          response => { _this.handleError(number, this.$i18n.t('this_sub_swath_could_not_be_found', {num: number + 1})) }
+          response => { _this.handleError(number, _this.$i18n.t('this_sub_swath_could_not_be_found', {num: number + 1})) }
         )
       },
       findTiff (url, number, response) {
@@ -595,11 +604,11 @@
         var urlsmall = null
         var urlbig = null
         links.forEach(function (link) {
-          var smalltif = link.textContent.match(/.*_small.tif{1,2}/)
+          var smalltif = link.getAttribute('href').match(/.*_small.tif{1,2}/)
           if (smalltif) {
             urlsmall = url + link.getAttribute('href')
           } else {
-            var bigtiff = link.textContent.match(/.*.tif{1,2}/)
+            var bigtiff = link.getAttribute('href').match(/.*.tif{1,2}/)
             if (bigtiff) {
               urlbig = url + link.getAttribute('href')
             }
@@ -609,13 +618,15 @@
           var urls = {smalltiff: urlsmall, bigtiff: urlbig}
           var numMessage = this.messages.push(this.$i18n.t('loading_sub_swath', {num: number + 1}))
           this.loadGeotiff(number, urls, numMessage - 1)
+        } else {
+        	this.changeMessage(number, this.$i18n.t('subswath_not_found', {num: number + 1}))
         }
       },
       readList () {
         var _this = this
         this.$http.get(this.jsonurl).then(
             response => { _this.loadFiles(response) },
-            response => { _this.handleError(null, this.$i18n.t('files_list_not_found')) }
+            response => { _this.handleError(null, _this.$i18n.t('files_list_not_found')) }
           )
       },
       loadFiles (response) {
@@ -661,7 +672,8 @@
           this.nUnloadTiffs += 1
           this.messages.push(msg)
         } else {
-          this.messages = [msg]
+          this.messages = []
+          this.messages.push(msg)
         }
         this.playing = false
       },

@@ -88,14 +88,14 @@ L.Control.ListControl = L.Control.extend({
     var checkbox = L.DomUtil.create('input', '', div)
     checkbox.type = 'checkbox'
     checkbox.checked = this._list[i].checked
-    var index = _this.list[i].index
+    var index = this._list[i].index
     var span = L.DomUtil.create('span', '', div)
     span.innerHTML = this.translation.subswath[this.lang] + ' N°' + (index + 1)
     var _this = this
     L.DomEvent.on(div, 'mouseover', function () { _this._env.showSsfauche(index) }, div)
     L.DomEvent.on(div, 'mouseout', function () { _this._env.hideSsfauche(index) }, div)
     L.DomEvent.on(checkbox, 'click', function () {
-      _this._list[index].checked = this.checked
+      _this._list[i].checked = this.checked
       _this._env.toggleGeotiff(index, this.checked)
     }, checkbox)
     this._content.append(div)
