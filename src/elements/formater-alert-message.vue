@@ -45,13 +45,6 @@ export default {
       timer: null
     }
   },
-  created () {
-    console.log('alert is created')
-  },
-  mounted () {
-    // this.createHTML(this.msg)
-    // this.start()
-  },
   destroyed () {
     this.stop()
   },

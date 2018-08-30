@@ -40,7 +40,8 @@
       "files_list_not_found": "The file list was not found",
       "component": "Component",
       "no_subswath": "No subswath found with this token",
-      "subswath_not_found": "subswath N° {num} not found"
+      "subswath_not_found": "subswath N° {num} not found",
+      "no_subswath_found": "No subswath found!"
     },
     "fr": {
       "parameters_and_search": "Paramètres et recherche",
@@ -82,7 +83,8 @@
       "files_list_not_found": "La liste des fichiers est introuvable",
       "component": "Composant",
       "no_subswath": "Aucun sous-fauchée trouvée pour ce token",
-      "subswath_not_found": "Sous-fauchée N° {num} introuvable"
+      "subswath_not_found": "Sous-fauchée N° {num} introuvable",
+      "no_subswath_found": "Aucune sous-fauchée trouvée!"
     }
   }
 </i18n>
@@ -338,9 +340,9 @@
         // optima for each raster
         optimas: [],
         mode: 'point',
-        // nombre de fichiers geotiffs
+        // nombre de répertoires de sous fauchées avec 1 fichier geotiff small.tif dedans
         ntiffs: 0,
-        nUnloadTiffs: 0,
+        loadedTiffs: 0,
         colorScales: Object.keys(plotty.colorscales).sort(),
         resizeListener: null,
         editableLayers: null,
@@ -393,13 +395,10 @@
     },
     mounted () {
       var _this = this
-      console.log('InterferoViewer mounted')
       this.initDefault()
       this.initMap()
       this.resizeListener = this.handleResize.bind(this)
       window.addEventListener('resize', this.resizeListener)
-      console.log(this.token)
-      console.log(this.dirurl)
       if (this.token && this.dirurl) {
         this.urlResultat = this.dirurl + this.token + '/'
         this.searchUrlTiffs()
@@ -575,9 +574,7 @@
         var links = html.querySelectorAll('a')
         this.messages.push(this.$i18n.t('dir_reading'))
         var _this = this
-        console.log(links)
         links.forEach(function (link) {
-        	console.log(link.href)
           var ssfauche = link.getAttribute('href').match(/iw([1-3])\//)
           if (ssfauche) {
             _this.ntiffs += 1
@@ -619,6 +616,7 @@
           var numMessage = this.messages.push(this.$i18n.t('loading_sub_swath', {num: number + 1}))
           this.loadGeotiff(number, urls, numMessage - 1)
         } else {
+            this.ntiffs -= 1
         	this.changeMessage(number, this.$i18n.t('subswath_not_found', {num: number + 1}))
         }
       },
@@ -644,7 +642,7 @@
         this.geotiffs.forEach(function (geotiff) {
           count++
         })
-        if (count === this.ntiffs + this.nUnloadTiffs) {
+        if (this.ntiffs === this.loadedTiffs) {
           this.initRasters()
           this.initDoubleRange()
           this.disabled = false
@@ -669,7 +667,7 @@
       handleError (ssfauche, msg) {
         // nombre d'introuvable
         if (['1', '2', '3'].indexOf(ssfauche) >= 0) {
-          this.nUnloadTiffs += 1
+          this.ntiffs -= 1
           this.messages.push(msg)
         } else {
           this.messages = []
@@ -694,7 +692,6 @@
       */
       loadGeotiff (ssfauche, urls, numMessage) {
         this.initRenderer(ssfauche)
-
         this.geotiffs[ssfauche] = L.leafletGeotiff(urls.smalltiff,
           {
             renderer: this.renderer[ssfauche],
@@ -709,6 +706,7 @@
           if (numMessage) {
             _this.changeMessage(numMessage, _this.$i18n.t('sub_swath_loaded', {num: ssfauche + 1}))
            }
+          _this.loadedTiffs += 1
           _this.initGeotiff(ssfauche)
         })
 //         this.geotiffs[ssfauche].on('click', function () {
@@ -918,9 +916,14 @@
       changeMessage (index, msg) {
         // changement pas détecté par vuejs :
         this.messages[index] = msg
-        // changements détectés !!!!:
-        this.messages.push('')
-        this.messages.pop()
+        
+        if (this.ntiffs === 0) {
+          this.handleError(null, this.$i18n.t('no_subswath_found'))
+        } else {
+          // changements détectés !!!!:
+          this.messages.push('')
+          this.messages.pop()
+        }
       },
       changeMinMax: function (event) {
     	  if (!event.displayed && (!event.displayed.min || event.displayed.min === null)) {
