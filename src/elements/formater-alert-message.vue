@@ -75,6 +75,7 @@ export default {
     },
     close () {
       this.message = []
+      this.$emit('close')
     }
   }
 }
@@ -86,7 +87,7 @@ export default {
       left: 0;
       width:100%;
       text-align:center;
-      z-index:1000;
+      z-index:2000;
   }
   .formater-alert > div {
       margin: auto;
