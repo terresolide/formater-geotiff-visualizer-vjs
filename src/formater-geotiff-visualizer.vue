@@ -249,8 +249,7 @@
   let locale = navigator.language.substr(0, 2)
   var L = require('./module/leaflet.extends.js')
   import FormaterDoubleRange from './elements/formater-double-range.vue'
-  import FormaterAlertMessage from './elements/formater-alert-message.vue'
-  import FormaterAttribution from './elements/formater-attribution.vue'
+  import {FormaterAlertMessage, FormaterAttribution} from 'formater-commons-components-vjs'
   require('leaflet-draw')
 
 
