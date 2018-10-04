@@ -557,7 +557,7 @@
         layer.setValues(values)
       },
       searchUrlTiffs () {
-        this.messages = [this.$i18n.t('searching')]
+        this.messages.push(this.$i18n.t('searching'))
         this.playing = true
         this.tiffs = []
         var _this = this
@@ -1186,39 +1186,40 @@
 
 
 <style>
-#mapTiff .leaflet-control-container .leaflet-top.leaflet-left{
+
+div[id="mapTiff"] .leaflet-control-container .leaflet-top.leaflet-left{
     pointer-events:none;
 }
-#mapTiff .leaflet-container .leaflet-draw-section a{
+div[id="mapTiff"] .leaflet-container .leaflet-draw-section a{
     color: #fff;
     font-weight: 700;
 }
-#mapTiff .leaflet-draw-tooltip {
+div[id="mapTiff"] .leaflet-draw-tooltip {
     display: none;
 }
-#mapTiff .leaflet-draw-actions li {
+div[id="mapTiff"] .leaflet-draw-actions li {
     display: block;
     margin: 0 0 1px 0;
     border-radius: 0;
 }
-#mapTiff .leaflet-draw-actions {
+div[id="mapTiff"] .leaflet-draw-actions {
     background: #555;
     margin-left:5px;
     padding: 2px;
     -webkit-border-radius: 0 4px 4px 4px;
     border-radius: 0 4px 4px 4px;
 }
-#mapTiff .leaflet-draw-actions li:first-child a{
+div[id="mapTiff"] .leaflet-draw-actions li:first-child a{
     -webkit-border-radius: 0 4px 0 0;
     border-radius: 0 4px 0 0;
 }
-#mapTiff .leaflet-draw-actions li:last-child a{
+div[id="mapTiff"] .leaflet-draw-actions li:last-child a{
     -webkit-border-radius: 0 0px 4px 4px;
     border-radius: 0 0px 4px 4px;
 }
  /** css pour list control*/
  /** css leaflet.list-control.js **/
-#mapTiff .leaflet-control.leaflet-list h4{
+div[id="mapTiff"] .leaflet-control.leaflet-list h4{
   margin:0;
   padding:0;
   background: white;
@@ -1227,122 +1228,136 @@
   border-top-left-radius: 2px;
   border-top-right-radius: 2px;
 }
-#mapTiff .leaflet-control.leaflet-list a.leaflet-list-toggle{
+div[id="mapTiff"] .leaflet-control.leaflet-list a.leaflet-list-toggle{
     margin: 0;
     border: none;
     font-size: 18px;
 }
-#mapTiff .leaflet-control.leaflet-list a.leaflet-list-toggle:hover {
+div[id="mapTiff"] .leaflet-control.leaflet-list a.leaflet-list-toggle:hover {
   cursor: pointer;
   font-weight: 800;
   border: none;
 }
-#mapTiff .leaflet-control.leaflet-list a.leaflet-list-toggle:active,
-#mapTiff .leaflet-control.leaflet-list a.leaflet-list-toggle:visited {
+div[id="mapTiff"] .leaflet-control.leaflet-list a.leaflet-list-toggle:active,
+div[id="mapTiff"] .leaflet-control.leaflet-list a.leaflet-list-toggle:visited {
   border: none;
 }
-#mapTiff .leaflet-control.leaflet-list div.content{
+div[id="mapTiff"] .leaflet-control.leaflet-list div.content{
  background:white;
  margin:0;
  border:none;
 }
-
-#mapTiff .leaflet-control.leaflet-list h4 span{
+div[id="mapTiff"] .leaflet-control.leaflet-list h4 span{
   display:none;
   margin-left:5px;
 }
-#mapTiff .leaflet-control.leaflet-list div.content{
+div[id="mapTiff"] .leaflet-control.leaflet-list div.content{
   display:none;
 }
-
-#mapTiff .leaflet-control.leaflet-list.leaflet-control-expanded h4,
-#mapTiff .leaflet-control.leaflet-list.leaflet-control-expanded h4 a {
+div[id="mapTiff"] .leaflet-control.leaflet-list.leaflet-control-expanded h4,
+div[id="mapTiff"] .leaflet-control.leaflet-list.leaflet-control-expanded h4 a {
   background: black;
   color:white;
 }
-#mapTiff .leaflet-control.leaflet-list.leaflet-control-expanded h4 span{
+div[id="mapTiff"] .leaflet-control.leaflet-list.leaflet-control-expanded h4 span{
   display:inline-block;
    margin-left:5px;
   margin-top: 5px;
 }
-#mapTiff .leaflet-control.leaflet-list.leaflet-control-expanded div.content{
+div[id="mapTiff"] .leaflet-control.leaflet-list.leaflet-control-expanded div.content{
   display:block;
 }
-#mapTiff div.leaflet-item{
+div[id="mapTiff"] div.leaflet-item{
   background: #f0f0f0;
   cursor: pointer;
   margin: 1px 0;
   padding: 1px 5px;
 }
-#mapTiff div.leaflet-item input,
+div[id="mapTiff"] div.leaflet-item input,
 #mapTiff div.leaflet-item span{
   vertical-align: middle;
 }
-#mapTiff div.leaflet-item:hover{
+div[id="mapTiff"] div.leaflet-item:hover{
   background:#e8e8e8;
   border: 1px dotted grey;
 }
 /** css for control reset **/
-#mapTiff .leaflet-reset {
+div[id="mapTiff"] .leaflet-reset {
   font-size: 24px;
   cursor: pointer;
 }
-
 /** css for popup **/
-#mapTiff .formater-popup-item span.bullet{
-   font-size: 20px;
+div[id="mapTiff"] .formater-popup-item span.bullet{
+   font-size: 30px;
    vertical-align:middle;
- }
-
-#mapTiff .markerIcon span{
-  width: 2rem;
-  height: 2rem;
+}
+div[id="mapTiff"] .markerIcon {
+   font-size:12px;
+}
+div[id="mapTiff"] .markerIcon span{
+  width: 2em;
+  height: 2em;
   display: block;
-  left: -1rem;
-  top: -1rem;
+  left: -1em;
+  top: -1em;
   position: relative;
   padding: 2px;
   color:#fff;
   text-align: center;
-  border-radius: 2rem 2rem 0;
+  border-radius: 2em 2em 0;
   transform: rotate(45deg);
  }
- #mapTiff .markerIcon span > span {
-   transform: rotate(-45deg) translate(0, 24px);
+div[id="mapTiff"] .markerIcon span > span {
+   transform: rotate(-45deg) translate(0, 1.2em);
  }
 </style>
 <style scoped>
 /* @import "../node_modules/leaflet-draw/dist/leaflet.draw.css";
  @import "../node_modules/leaflet/dist/leaflet.css";
  @import "./assets/css/fontello.css";*/
- #content{
+ .geotiff-viewer{
     font-family: 'Roboto', sans-serif;
     position: relative;
     width: 100%;
     min-height:500px;
     display:block;
   }
-  #form h2, #form h3 {
+  .geotiff-viewer div[id="form"] h2 {
+    border-bottom: 1px solid grey;
+    margin: 0;
+    padding: 25px 0 20px 10px;
+    box-shadow: 0px 1px 5px #888888;
+    font-size:1.5em;
     text-transform: uppercase;
   }
-  #form h4::first-letter,
-  #form label::first-letter {
+  div[id="form"] h3 {
+    font-weight:800;
+    font-size:1.15em;
+    text-transform: uppercase;
+    letter-spacing: .01em;
+  }
+  div[id="form"] h4{
+    font-weight:800;
+    font-size:1em;
+    letter-spacing: .01em;
+  }
+  div[id="form"] h4::first-letter,
+  div[id="form"] label::first-letter {
     text-transform: uppercase;
   }
- .geotiff-viewer #mapTiff {
+ .geotiff-viewer div[id="mapTiff"]{
     margin-left:385px;
     margin-right:10px;
     position:relative;
     height: 100%;
     box-sizing: border-box;
   }
-  #mapTiff div.map {
+  div[id="mapTiff"] div.map {
     position: absolute;
     height:100%;
     width:100%;
   }
-
-  #form {
+  div[id="form"] {
     display: block;
     width: 20%;
     background-color: #f0f0f0;
@@ -1356,20 +1371,13 @@
     font-size:14px;
     letter-spacing: .01em;
   }
-  #form .form-content{
+  div[id="form"] .form-content{
     height: 95%;
     overflow: hidden;
     padding:0;
     margin:0;
   }
-  #form h2 {
-   border-bottom: 1px solid grey;
-   margin: 0;
-   padding: 25px 0 20px 10px;
-   box-shadow: 0px 1px 5px #888888;
-   font-size:22px;
-  }
-  #search{
+  div[id="search"]{
    max-height:90%;
    overflow-y:auto;
   }
@@ -1391,17 +1399,18 @@
  }
  span.label{
    font-weight: 500;
+   color:#000;
  }
  #search h3{
    cursor: pointer;
    color:#000;
    pointer-events:auto;
  }
- #search.disabled h3{
+ div[id="search"].disabled h3{
    pointer-events:none;
    color:grey;
  }
- h3::before{
+ .geotiff-viewer h3::before{
    content: "\23F5";
    font-size:1.2em;
    padding-right: 5px;
@@ -1419,36 +1428,35 @@
    max-height:600px;
    transition: max-height .5s ease;
  }
- div.instruction{
+ .geotiff-viewer div.instruction{
    padding: 5px 10px;
    line-height:1;
    color: grey;
  }
- div.instruction div.leaflet-draw-toolbar.leaflet-bar {
+ .geotiff-viewer div.instruction div.leaflet-draw-toolbar.leaflet-bar {
    box-shadow: none;
  }
- div.instruction div.leaflet-draw-toolbar.leaflet-bar a{
+ .geotiff-viewer div.instruction div.leaflet-draw-toolbar.leaflet-bar a{
    display: inline-block;
    vertical-align: middle;
  }
- div.instruction ul{
+ .geotiff-viewer div.instruction ul{
   list-style-type: square
  }
-  div.instruction ul li{
+ .geotiff-viewer div.instruction ul li{
     padding-left:-30px;
-  }
- div.instruction ul li::before{
-   content:'\2192 ';
- 
  }
- .chart-container{
+ .geotiff-viewer div.instruction ul li::before{
+   content:'\2192 ';
+ }
+ .geotiff-viewer .chart-container{
    width:80%;
    margin: auto;
    position:relative;
    background:white;
    box-shadow: 0px 1px 5px #888888;
  }
- .chart-container .close {
+ .geotiff-viewer .chart-container .close {
   font-family: Arial;
   position:absolute;
   right:3px;
@@ -1460,13 +1468,12 @@
   font-size: 22px;
   font-weight: bold;
   display: inline-block;
-
   z-index:800;
  }
- .chart-container .close:hover{
+ .geotiff-viewer .chart-container .close:hover{
    close: #000;
  }
- .hasChart {
+ .geotiff-viewer .hasChart {
    position:absolute;
    z-index:5000;
    width:100%;
@@ -1475,20 +1482,20 @@
    left:0;
    text-align:center;
  }
- .blue{
+ .geotiff-viewer .blue{
    color: blue;
    cursor: pointer;
  }
- #chart{
+ .geotiff-viewer div[id="chart"]{
    width:100%;
    margin:auto;
    padding:15px;
  }
- .list-geotiff li{
+ .geotiff-viewer .list-geotiff li{
    margin: 3px 3px;
  }
 
- a.geotiff-url {
+ .geotiff-viewer a.geotiff-url {
    display: inline-block;
    margin: 0px 7px 3px 0;
    padding: 3px 12px;
@@ -1511,57 +1518,53 @@
    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.65);
   }
  
-  a.geotiff-url:hover{
+  .geotiff-viewer a.geotiff-url:hover{
    background: #f0f0e6;
    text-decoration: none;
   }
-  a.geotiff-url:disabled{
+  .geotiff-viewer a.geotiff-url:disabled{
     color: #999;
     pointer-events: none;
   }
- .formater-ssfauche-optima{
+ .geotiff-viewer .formater-ssfauche-optima{
    margin: 5px 0 0 10px;
  }
- .formater-ssfauche-optima h5{
+ .geotiff-viewer.formater-ssfauche-optima h5{
    margin: 0;
   }
- .formater-ssfauche-optima h5 span{
+ .geotiff-viewer .formater-ssfauche-optima h5 span{
    width:15px;
    display:inline-block;
  }
- .formater-ssfauche-optima ul{
+ .geotiff-viewer .formater-ssfauche-optima ul{
    margin: 0 8px;
    font-size:0.9em;
  }
- .formater-ssfauche-optima ul li{
+ .geotiff-viewer .formater-ssfauche-optima ul li{
    margin: 0 5px;
    min-width: 130px;
  }
-  h1, h2 {
+ .geotiff-viewer h1, 
+ .geotiff-viewer h2 {
     font-weight: normal;
   }
 
-  ul {
+  .geotiff-viewer ul {
     list-style-type: none;
     padding: 0;
   }
 
-  li {
+  .geotiff-viewer li {
     display: inline-block;
     margin: 0 10px;
   }
 
-  a {
+  .geotiff-viewer a {
     color: #42b983;
   }
 
-  body {
-    font-family: 'Roboto', sans-serif;
-  }
 
-
-
-  a.link {
+  .geotiff-viewer a.link {
     color: #1c1c1c;
     text-decoration: none;
     font-size: 0.8rem;
@@ -1571,13 +1574,13 @@
     font-family: 'Roboto', sans-serif;
   }
 
-  .link.router-link-active{
+  .geotiff-viewer .link.router-link-active{
     border-bottom: 2px solid orange;
     padding-bottom: 15px;
   }
 
-  .link{
-    #float: right;
+  .geotiff-viewer .link{
+    float: right;
     border-bottom: none;
     display: inline;
     list-style: none;
@@ -1589,8 +1592,8 @@
     list-style-position: outside;
     margin-bottom: 1.25rem;
   }
-   button,
- input[type="button"]{
+  .geotiff-viewer button,
+  .geotiff-viewer input[type="button"]{
    display: inline-block;
    margin: 0px 7px 3px 0;
    padding: 3px 12px;
@@ -1612,13 +1615,13 @@
    box-sizing: border-box;
    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.65);
   }
-  button:hover,
-  input[type="button"]:hover{
+  .geotiff-viewer button:hover,
+  .geotiff-viewer input[type="button"]:hover{
    background: #f0f0e6;
    text-decoration: none;
  }
-  button:disabled,
-  input[type="button"]:disabled{
+  .geotiff-viewer button:disabled,
+  .geotiff-viewer input[type="button"]:disabled{
     color: #999;
     pointer-events: none;
   }
