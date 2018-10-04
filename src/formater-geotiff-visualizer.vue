@@ -1147,9 +1147,9 @@
       addMaxMinMarker (index, latlng, value, type) {
         var iconMaxMin = L.divIcon({
           className: 'markerIcon',
-          iconAnchor: [-4, 18],
-          labelAnchor: [-4, 0],
-          popupAnchor: [0, -24],
+          iconAnchor: [-6, 12],
+          labelAnchor: [-6, 0],
+          popupAnchor: [8, -24],
           html: '<span style="background:' + this.graphColors[index] + ';"><span>' + type + '</span></span>'
         })
         var marker = L.marker(latlng, {icon: iconMaxMin, value: value})
