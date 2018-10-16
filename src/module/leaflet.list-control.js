@@ -83,33 +83,34 @@ L.Control.ListControl = L.Control.extend({
     this._container = container
     return container
   },
-  _addItem: function (index) {
+  _addItem: function (i) {
     var div = L.DomUtil.create('div', 'leaflet-item')
     var checkbox = L.DomUtil.create('input', '', div)
     checkbox.type = 'checkbox'
-    checkbox.checked = this._list[index].checked
+    checkbox.checked = this._list[i].checked
+    var index = this._list[i].index
     var span = L.DomUtil.create('span', '', div)
     span.innerHTML = this.translation.subswath[this.lang] + ' N°' + (index + 1)
     var _this = this
     L.DomEvent.on(div, 'mouseover', function () { _this._env.showSsfauche(index) }, div)
     L.DomEvent.on(div, 'mouseout', function () { _this._env.hideSsfauche(index) }, div)
     L.DomEvent.on(checkbox, 'click', function () {
-      _this._list[index].checked = this.checked
+      _this._list[i].checked = this.checked
       _this._env.toggleGeotiff(index, this.checked)
     }, checkbox)
     this._content.append(div)
   },
   _removeContent: function () {
-	if (typeof this._content === 'undefinde') {
+	if (typeof this._content === 'undefined') {
 		return
 	}
-    var nodes = this._content.querySelectorAll('div')
-    nodes.forEach(function (div) {
-      L.DomEvent.off(div, 'mouseover', function () { _this._env.showSsfauche(index) }, div)
-      L.DomEvent.off(div, 'mouseout', function () { _this._env.hideSsfauche(index) }, div)
-      var checkbox = div.querySelector('input')
-      L.DomEvent.off(checkbox, 'click', function () { _this._env.toggleGeotiff(index, this.checked) }, checkbox)
-    })
+//    var nodes = this._content.querySelectorAll('div')
+//    nodes.forEach(function (div) {
+//      L.DomEvent.off(div, 'mouseover', function () { _this._env.showSsfauche(index) }, div)
+//      L.DomEvent.off(div, 'mouseout', function () { _this._env.hideSsfauche(index) }, div)
+//      var checkbox = div.querySelector('input')
+//      L.DomEvent.off(checkbox, 'click', function () { _this._env.toggleGeotiff(index, this.checked) }, checkbox)
+//    })
     this._content.innerHTML = ''
   },
   _initContent () {
@@ -142,8 +143,8 @@ L.Control.ListControl = L.Control.extend({
   },
   _initList: function () {
     var list = []
-    this._env.geotiffs.forEach(function (geotiff) {
-      list.push({ 'url': geotiff.getURL(), 'checked': true})
+    this._env.geotiffs.forEach(function (geotiff, index) {
+      list.push({ index: index, 'url': geotiff.getURL(), 'checked': true})
     })
     this._list = list
   },
