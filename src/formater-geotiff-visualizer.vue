@@ -90,7 +90,7 @@
 </i18n>
 <template>
   <div>
-    <div id="content" class="geotiff-viewer">
+    <div id="container" class="geotiff-viewer">
     <!-- avant formater alert -->
       <formater-alert-message ref="alert" :msg="JSON.stringify(messages)" :playing="playing" :lang="lang"></formater-alert-message>
       <!-- après formater -->
@@ -246,7 +246,6 @@
 
 <script>
 /* eslint no-unused-vars: "off" */
-  let locale = navigator.language.substr(0, 2)
   var L = require('./module/leaflet.extends.js')
   import FormaterDoubleRange from './elements/formater-double-range.vue'
   import {FormaterAlertMessage, FormaterAttribution} from 'formater-commons-components-vjs'
@@ -285,7 +284,7 @@
       },
       token: {
         type: String,
-        default: '95dfc275-bb03-450c-8a31-370cf7bd5c8a'
+        default: null
       },
       dirurl: {
         type: String,
@@ -407,6 +406,7 @@
         this.messages.push(this.$i18n.t('no_selected_file'))
         this.playing = false
       }
+      console.log('load ended')
     },
     destroyed () {
       window.removeEventListener('resize', this.resizeListener)
@@ -1006,7 +1006,7 @@
     	  var pos = this.$el.getBoundingClientRect()
     	  var h = pos.top + 5
     	}
-        this.$el.querySelector('#content').style.height = Math.max(window.innerHeight - h, 500) + 'px'
+        this.$el.querySelector('#container').style.height = Math.max(window.innerHeight - h, 500) + 'px'
         if (this.map) {
           this.map.invalidateSize()
         }
