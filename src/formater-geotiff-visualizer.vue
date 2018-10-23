@@ -662,14 +662,7 @@
       },
       receiveFile (event) {
         var numMessage = this.messages.push(this.$i18n.t('loading_file', {num: 1}))
-        var reader  = new FileReader()
-        var _this = this
-        reader.addEventListener("load", function () {
-          _this.loadGeotiff(0, reader.result, numMessage -1 )
- 	     }, false)
-        if (event.detail) {
-          reader.readAsDataURL(event.detail)
-        }
+        
        
       },
       removeFile (event) {
