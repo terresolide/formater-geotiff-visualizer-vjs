@@ -397,6 +397,8 @@
       this.initMap()
       this.resizeListener = this.handleResize.bind(this)
       window.addEventListener('resize', this.resizeListener)
+      console.log(this.token)
+      console.log(this.dirurl)
       if (this.token && this.dirurl) {
         this.urlResultat = this.dirurl + this.token + '/'
         this.searchUrlTiffs()
