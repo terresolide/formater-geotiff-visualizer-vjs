@@ -104,8 +104,17 @@
        <formater-attribution :lang="currentLang" :name="$t('component')" color="#000000" linkcolor="#8c0209" position="BL" url="https://github.com/terresolide/formater-geotiff-visualizer-vjs" v-if="attribution"></formater-attribution>
       <div class="form-content">
       <h2>{{$t('parameters_and_search')}}</h2>
-        <div id="search" :class="disabled ? 'disabled' : ''">
-          <div class="form-group">
+        <div id="search">
+          <div class="form-group" v-if="free">
+               <h3 :class="extend5 ? 'extend' : ''" @click="extend5 = !extend5">{{$t('client_file')}}</h3>
+               <div class="group-content">
+                   <div class="input-group" style="margin-left:2px;">
+                     <dragdrop-file ext="tif,tiff" :lang="lang" color="#707070" :max-files="3"></dragdrop-file>
+                   </div>
+               </div>
+          </div>
+          
+          <div class="form-group" :class="{disabled:disabled}">
                <h3 :class="extend0 ? 'extend' : ''" @click="extend0 = !extend0">{{$t('band_raster')}}</h3>
                <div class="group-content">
                    <div class="input-group">
@@ -116,7 +125,7 @@
                    </div>
                </div>
           </div>
-          <div class="form-group">
+          <div class="form-group" :class="{disabled:disabled}">
               <h3 :class="extend1 ? 'extend' : ''" @click="extend1 = !extend1">{{$t('image_parameters')}}</h3>
               <div class="group-content">
                   <div class="input-group">
@@ -152,7 +161,7 @@
                   </div>
               </div>
          </div>
-         <div class="form-group">
+         <div class="form-group" :class="{disabled:disabled}">
              <h3 :class="extend2 ? 'extend' : ''" @click="extend2 = !extend2">{{$t('search')}}</h3>
                <div class="group-content">
                  <div class="input-group">
@@ -193,7 +202,7 @@
                  </div>
                </div>
             </div>
-            <div class="form-group">
+            <div class="form-group" :class="{disabled:disabled}">
               <h3 :class="extend3 ? 'extend' : ''" @click="extend3 = !extend3">{{$t('download')}}</h3>
                <div class="group-content">
                  <div class="input-group">
@@ -248,7 +257,7 @@
 /* eslint no-unused-vars: "off" */
   var L = require('./module/leaflet.extends.js')
   import FormaterDoubleRange from './elements/formater-double-range.vue'
-  import {FormaterAlertMessage, FormaterAttribution} from 'formater-commons-components-vjs'
+  import {FormaterAlertMessage, FormaterAttribution, DragdropFile} from 'formater-commons-components-vjs'
   require('leaflet-draw')
 
 
@@ -271,7 +280,8 @@
     components: {
       FormaterDoubleRange,
       FormaterAlertMessage,
-      FormaterAttribution
+      FormaterAttribution,
+      DragdropFile
     },
     props: {
       lang: {
@@ -297,6 +307,7 @@
     },
     data () {
       return {
+        extend5: true,
         extend0: false,
         extend1: false,
         extend2: false,
@@ -365,7 +376,10 @@
         resetControl: null,
         files: [],
         currentLang: 'en',
-        languageChangeListener: null
+        languageChangeListener: null,
+        receiveFileListener: null,
+        removeFileListener: null,
+        free: false
       }
     },
      watch: {
@@ -386,8 +400,12 @@
       if (this.lang === 'fr') {
         L.drawLocal = require('./module/leaflet.draw.fr.js')
       }
-      this.languageChangeListener = this.changeLanguage.bind( this);
-      document.addEventListener('languageChange', this.languageChangeListener);
+      this.languageChangeListener = this.changeLanguage.bind(this)
+      document.addEventListener('languageChange', this.languageChangeListener)
+      this.receiveFileListener = this.receiveFile.bind(this)
+      document.addEventListener('receiveFile', this.receiveFileListener)
+      this.removeFileListener = this.removeFile.bind(this)
+      document.addEventListener('removeFile', this.removeFileListener)
       var event = new CustomEvent('languageRequest')
       document.dispatchEvent(event)
     },
@@ -405,8 +423,8 @@
       } else if (this.jsonurl) {
         this.readList ()
       } else {
+        this.free = true
         this.messages.push(this.$i18n.t('no_selected_file'))
-        this.playing = false
       }
       console.log('load ended')
     },
@@ -425,8 +443,12 @@
         this.listControl.remove()
         this.listControl = null
       }
-      document.removeEventListener('languageChangeListener', this.changeLanguage);
-      this.languageChangeListener = null;
+      document.removeEventListener('languageChangeListener', this.changeLanguage)
+      this.languageChangeListener = null
+      document.removeEventListener('receiveFile', this.receiveFileListener)
+      this.receiveFileListener = null
+      document.removeEventListener('removeFile', this.removeFileListener)
+      this.removeFileListener = null     
     },
     methods: {
       initDefault () {
@@ -637,6 +659,21 @@
           var numMessage = _this.messages.push(_this.$i18n.t('loading_sub_swath', {num: number + 1}))
           _this.loadGeotiff(number, file, numMessage - 1)
         })
+      },
+      receiveFile (event) {
+        var numMessage = this.messages.push(this.$i18n.t('loading_file', {num: 1}))
+        var reader  = new FileReader()
+        var _this = this
+        reader.addEventListener("load", function () {
+          _this.loadGeotiff(0, reader.result, numMessage -1 )
+ 	     }, false)
+        if (event.detail) {
+          reader.readAsDataURL(event.detail)
+        }
+       
+      },
+      removeFile (event) {
+        
       },
       afterLoad () {
         var count = 0
@@ -1403,12 +1440,12 @@ div[id="mapTiff"] .markerIcon span > span {
    font-weight: 500;
    color:#000;
  }
- #search h3{
+ div[id="search"] h3{
    cursor: pointer;
    color:#000;
    pointer-events:auto;
  }
- div[id="search"].disabled h3{
+ div[id="search"] .form-group.disabled h3{
    pointer-events:none;
    color:grey;
  }

@@ -12,6 +12,9 @@ Vue.use(VueI18n);
 import VueResource from 'vue-resource'
 Vue.use(VueResource);
 
+import {VueTools} from 'formater-commons-components-vjs'
+Vue.use(VueTools)
+
 import GeotiffVisualizer from './formater-geotiff-visualizer.vue'
 // import FormaterAttribution from './formater-attribution.vue'
 // import AlertMessage from './elements/formater-alert-message.vue'
@@ -30,7 +33,8 @@ Vue.filter('number', function (value) {
 
 ljs.addAliases({
     dep: [
- 
+      // font-awesome
+      'https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css', 
        //leaflet css
        //------------
        'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.1/leaflet.css',
