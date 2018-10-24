@@ -33,8 +33,8 @@ Vue.filter('number', function (value) {
 
 ljs.addAliases({
     dep: [
-      // font-awesome
-      'https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css', 
+       // font-awesome
+       //  'https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css', 
        //leaflet css
        //------------
        'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.1/leaflet.css',

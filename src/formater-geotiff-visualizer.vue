@@ -677,20 +677,18 @@
         })
       },
       receiveFile (event) {
-        this.files.push({filename: event.detail.name})
-        this.ntiffs = this.files.length
-        var numMessage = this.messages.push(this.$i18n.t('loading_file', {num: this.files.length}))
-        
-        this.loadGeotiff(this.files.length-1, event.detail, numMessage - 1, null)
-       
+        this.$set(this.files, event.detail.index, event.detail.file.name)
+        this.ntiffs++
+        var numMessage = this.messages.push(this.$i18n.t('loading_file', {num: event.detail.index + 1}))
+        this.loadGeotiff(event.detail.index, event.detail.file, numMessage - 1, null)
       },
       removeFile (event) {
-        var index = 1
+        var index = event.detail.index
         this.geotiffs[index].remove()
         delete this.geotiffs[index]
         delete this.files[index]
-        this.ntiffs = this.ntiffs -1
-        this.loadedTiffs = this.loadedTiffs - 1
+        this.ntiffs--
+        this.loadedTiffs--
         this.renderer[index] = null
         delete this.renderer[index]
         this.resetBounds()
@@ -709,7 +707,11 @@
           this.initDoubleRange()
           this.disabled = false
           this.changeOpacity()
-          this.map.fitBounds(this.bounds)
+          if (this.bounds) {
+            this.map.fitBounds(this.bounds)
+          } else {
+            this.map.fitBounds( L.latLngBounds([-90,-180], [90, 180]))
+          }
           if (!this.resetControl) {
             this.resetControl = new L.Control.ResetControl(this.bounds, this.lang)
             this.map.addControl(this.resetControl)
@@ -724,10 +726,15 @@
           } else {
             this.listControl.update(this)
           }
-          if (this.geotiffs.length === 0) {
+          if (this.ntiffs === 0) {
             this.listControl.remove()
             this.listControl = null
             this.disabled = true
+            this.extend0 = false
+            this.extend1 = false
+            this.extend2 = false
+            this.extend3 = false
+            this.extend4 = false
           }
         }
       },
@@ -801,9 +808,6 @@
         this.geotiffs.forEach(function (geotiff, ssfauche) {
           _this.addBoundsFromGeotiff(ssfauche)
         })
-        if (!this.bounds) {
-          this.bounds = L.latLngBounds([-90, -180], [90,180])
-        }
       },
       showSsfauche (index) {
         this.geotiffs[index].rectangle.setStyle({fillOpacity: 0.3})
@@ -1267,7 +1271,7 @@
 
 
 <style>
-
+ @import "./assets/css/fontello.css"; 
 div[id="mapTiff"] .leaflet-control-container .leaflet-top.leaflet-left{
     pointer-events:none;
 }
