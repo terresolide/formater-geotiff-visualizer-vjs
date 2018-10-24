@@ -6,7 +6,7 @@
     "url": "https://api.poleterresolide.fr/"
   },
   "production": {
-    "url": "https://cdn.rawgit.com/terresolide/"
+    "url": "https://api.poleterresolide.fr/webcomponents/"
   },
   "repository": {
     "type": "git",

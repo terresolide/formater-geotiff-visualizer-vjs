@@ -7,7 +7,7 @@ var CleanWebpackPlugin = require('clean-webpack-plugin');
 var UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 // var vueLoaderConfig = require('./vue-loader.conf')
 var preUrl = PACKAGE.preproduction.url + "/webcomponents/";
-var prodUrl = PACKAGE.production.url + buildName + "/" + buildVersion + "/dist/";
+var prodUrl = PACKAGE.production.url + buildName + "/" + buildVersion + "/";
 
 var pathsToClean = [
   'dist/*.*'
@@ -45,10 +45,10 @@ module.exports = {
       {
           test: /\.(woff(2)?|ttf|eot|svg)(\?v=\d+\.\d+\.\d+)?$/,
           use: [{
-              loader: 'file-loader',
+              loader: 'url-loader',
               options: {
-                  name: '[name].[ext]',
-                  outputPath: 'fonts/'
+                  limit: 10000,
+                  name: 'assets/fonts/[name].[hash:7].[ext]'
               }
           }]
       },
