@@ -657,12 +657,13 @@
         this.ntiffs = this.files.length
         this.files.forEach(function (file, number) {
           var numMessage = _this.messages.push(_this.$i18n.t('loading_sub_swath', {num: number + 1}))
-          _this.loadGeotiff(number, file, numMessage - 1)
+          _this.loadGeotiff(number, file.smalltiff, numMessage - 1)
         })
       },
       receiveFile (event) {
         var numMessage = this.messages.push(this.$i18n.t('loading_file', {num: 1}))
         
+        this.loadGeotiff(0, event.detail, numMessage - 1)
        
       },
       removeFile (event) {
@@ -723,12 +724,12 @@
       */
       loadGeotiff (ssfauche, urls, numMessage) {
         this.initRenderer(ssfauche)
-        this.geotiffs[ssfauche] = L.leafletGeotiff(urls.smalltiff,
+        this.geotiffs[ssfauche] = L.leafletGeotiff(urls, 
           {
             renderer: this.renderer[ssfauche],
             band: this.raster,
             color: this.graphColors[ssfauche],
-            tiff: urls.bigtiff
+           // tiff: urls.bigtiff
            // interactive: true,
            // bubblingMouseEvents: false
           })

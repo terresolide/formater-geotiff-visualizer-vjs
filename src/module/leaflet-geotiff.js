@@ -22,7 +22,7 @@ L.LeafletGeotiff = L.ImageOverlay.extend({
     clip: false
   },
   rastersCount: 0,
-  initialize: function (url, options) {
+  initialize: function (url,options) {
     if (typeof (GeoTIFF) === 'undefined') {
       throw new Error('GeoTIFF not defined')
     };
@@ -40,8 +40,14 @@ L.LeafletGeotiff = L.ImageOverlay.extend({
     if (this.options.renderer) {
       this.options.renderer.setParent(this)
     }
-
-    this._getData()
+    if (typeof url === 'string') {
+      this._url = url
+      this._getData()
+    } else {
+      this._filename = url.name
+      this._getFromBlob(url)
+    }
+   
   },
   getURL: function () {
     return this._url
@@ -77,11 +83,23 @@ L.LeafletGeotiff = L.ImageOverlay.extend({
       map.off('zoomanim', this._animateZoom, this)
     }
   },
+  _getFromBlob (file) {
+    var arrayBuffer = new Promise((resolve, reject) => {
+      
+      const reader = new FileReader()
+      var _this = this
+      reader.addEventListener("load", function (event) {
+        _this._parseTIFF(event.target.result)
+      }, false)
+      reader.readAsArrayBuffer(file);
+    });
+     
+  },
   _getData: function () {
     var self = this
     var request = new XMLHttpRequest()
     request.onload = function () {
-      if (this.status >= 200 && this.status < 400) {
+    if (this.status >= 200 && this.status < 400) {
         self._parseTIFF(this.response)
       } // TODO else handle error
     }
