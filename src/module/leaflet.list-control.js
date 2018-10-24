@@ -25,6 +25,10 @@ L.Control.ListControl = L.Control.extend({
     title: {
       'fr': 'Liste',
       'en': 'List'
+    },
+    file: {
+      'fr': 'Fichier',
+      'en': 'File'
     }
   },
   initialize: function (env, options) {
@@ -90,7 +94,11 @@ L.Control.ListControl = L.Control.extend({
     checkbox.checked = this._list[i].checked
     var index = this._list[i].index
     var span = L.DomUtil.create('span', '', div)
-    span.innerHTML = this.translation.subswath[this.lang] + ' N°' + (index + 1)
+    if (this._env.free) {
+      span.innerHTML = this.translation.file[this.lang] + ' N°' + (index + 1)
+    } else {
+      span.innerHTML = this.translation.subswath[this.lang] + ' N°' + (index + 1)
+    }
     var _this = this
     L.DomEvent.on(div, 'mouseover', function () { _this._env.showSsfauche(index) }, div)
     L.DomEvent.on(div, 'mouseout', function () { _this._env.hideSsfauche(index) }, div)
@@ -115,6 +123,7 @@ L.Control.ListControl = L.Control.extend({
   },
   _initContent () {
     this._removeContent()
+    console.log(this._list)
     if (this._list.length === 0) {
       return null
     }
@@ -149,6 +158,7 @@ L.Control.ListControl = L.Control.extend({
     this._list = list
   },
   update: function () {
+    this._initList()
     this._initContent()
   }
 })

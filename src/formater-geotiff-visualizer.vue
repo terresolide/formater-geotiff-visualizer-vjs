@@ -2,6 +2,7 @@
 {
     "en": {
       "parameters_and_search": "Parameters and search",
+      "client_file": "Your file | Your files",
       "band_raster": "band / raster",
       "no_raster": "No raster",
       "image_parameters": "Picture parameters",
@@ -17,6 +18,7 @@
       "overall_optima": "Minimum and maximum overall",
       "search_optima": "Search optima",
       "sub_swath": "Subswath",
+      "file": "File",
       "view_in_map": "View minimum and maximum on the map",
       "profile": "profile",
       "click_on": "Click on",
@@ -34,7 +36,9 @@
       "dir_reading": "Reading subswath directory",
       "this_sub_swath_could_not_be_found": "The subswath N°{num} could not be found",
       "loading_sub_swath": "Loading subswath N°{num}",
+      "loading_file": "Loading file N°{num}",
       "sub_swath_loaded": "Subswath N°{num} loaded",
+      "file_loaded": "File N°{num} loaded",
       "values_along_the_line": "Values along the line for the raster N°{raster}",
       "no_selected_file": "No selected file",
       "files_list_not_found": "The file list was not found",
@@ -45,6 +49,7 @@
     },
     "fr": {
       "parameters_and_search": "Paramètres et recherche",
+      "client_file": "Votre fichier | Vos fichiers",
       "band_raster": "bande / raster",
        "no_raster": "Aucun raster",
       "image_parameters": "Paramètres de l'image",
@@ -60,6 +65,7 @@
       "overall_optima": "minimum et maximum globaux",
       "search_optima": "Rechercher les optima",
       "sub_swath": "Sous-fauchée",
+      "file": "File",
       "view_in_map": "Visualiser les optima sur la carte",
       "profile": "profile",
       "click_on": "Cliquez sur",
@@ -77,7 +83,9 @@
       "dir_reading": "Lecture du dossier des sous-fauchées",
       "this_sub_swath_could_not_be_found": "La sous-fauchée N°{num} est introuvable",
       "loading_sub_swath": "Chargement de la sous-fauchée N°{num} en cours",
+      "loading_file": "Chargement du fichier N°{num} en cours",
       "sub_swath_loaded": "Sous-fauchée N°{num} chargée",
+      "file_loaded": "Ficher N°{num} chargé",
       "values_along_the_line": "Valeurs le long de la ligne pour la bande N°{raster}",
       "no_selected_file": "Aucun fichier sélectionné",
       "files_list_not_found": "La liste des fichiers est introuvable",
@@ -106,10 +114,10 @@
       <h2>{{$t('parameters_and_search')}}</h2>
         <div id="search">
           <div class="form-group" v-if="free">
-               <h3 :class="extend5 ? 'extend' : ''" @click="extend5 = !extend5">{{$t('client_file')}}</h3>
+               <h3 :class="extend5 ? 'extend' : ''" @click="extend5 = !extend5">{{$tc('client_file', maxFiles)}}</h3>
                <div class="group-content">
                    <div class="input-group" style="margin-left:2px;">
-                     <dragdrop-file ext="tif,tiff" :lang="lang" color="#707070" :max-files="3"></dragdrop-file>
+                     <dragdrop-file ext="tif,tiff" :lang="lang" color="#707070" :max-files="maxFiles"></dragdrop-file>
                    </div>
                </div>
           </div>
@@ -172,7 +180,7 @@
                     <li><span class="label">Maximum</span>: {{(optima.max == null) ? '--' : optima.max | number}}</li>
                   </ul>
                   <div class="formater-ssfauche-optima" v-if="optima.list && typeof value !== 'undefined'" v-for="(value, index) in optima.list" @mouseover="showSsfauche(index)" @mouseout="hideSsfauche(index)">
-                  <h5><span :style="'color: ' + graphColors[index] + ';'">&#9642;</span>{{$t('sub_swath')}} N°{{index + 1}}</h5>
+                  <h5><span :style="'color: ' + graphColors[index] + ';'">&#9642;</span>{{free ? $t('file') : $t('sub_swath')}} N°{{index + 1}}</h5>
                   <ul>
                     <li><span class="label">Minimum</span>: {{(value.min == null) ? '--' : value.min | number}}</li>
                     <li><span class="label">Maximum</span>: {{(value.max == null) ? '--' : value.max | number}}</li>
@@ -303,6 +311,14 @@
       attribution: {
         type: Boolean,
         default: true
+      },
+      band: {
+        type: Number,
+        default: 0
+      },
+      maxFiles: {
+         type: Number,
+         default: 3
       }
     },
     data () {
@@ -395,6 +411,7 @@
        }
     },
     created () {
+      this.raster = this.band - 1
       this.currentLang = this.lang
       this.$i18n.locale = this.lang
       if (this.lang === 'fr') {
@@ -418,15 +435,14 @@
       console.log(this.token)
       console.log(this.dirurl)
       if (this.token && this.dirurl) {
+        this.raster = 1
         this.urlResultat = this.dirurl + this.token + '/'
         this.searchUrlTiffs()
       } else if (this.jsonurl) {
         this.readList ()
       } else {
         this.free = true
-        this.messages.push(this.$i18n.t('no_selected_file'))
       }
-      console.log('load ended')
     },
     destroyed () {
       window.removeEventListener('resize', this.resizeListener)
@@ -637,7 +653,7 @@
         if (urlsmall) {
           var urls = {smalltiff: urlsmall, bigtiff: urlbig}
           var numMessage = this.messages.push(this.$i18n.t('loading_sub_swath', {num: number + 1}))
-          this.loadGeotiff(number, urls, numMessage - 1)
+          this.loadGeotiff(number, urlsmall, numMessage - 1, urlbig)
         } else {
             this.ntiffs -= 1
         	this.changeMessage(number, this.$i18n.t('subswath_not_found', {num: number + 1}))
@@ -657,23 +673,37 @@
         this.ntiffs = this.files.length
         this.files.forEach(function (file, number) {
           var numMessage = _this.messages.push(_this.$i18n.t('loading_sub_swath', {num: number + 1}))
-          _this.loadGeotiff(number, file.smalltiff, numMessage - 1)
+          _this.loadGeotiff(number, file.smalltiff, numMessage - 1, file.bigtiff)
         })
       },
       receiveFile (event) {
-        var numMessage = this.messages.push(this.$i18n.t('loading_file', {num: 1}))
+        this.files.push({filename: event.detail.name})
+        this.ntiffs = this.files.length
+        var numMessage = this.messages.push(this.$i18n.t('loading_file', {num: this.files.length}))
         
-        this.loadGeotiff(0, event.detail, numMessage - 1)
+        this.loadGeotiff(this.files.length-1, event.detail, numMessage - 1, null)
        
       },
       removeFile (event) {
+        var index = 1
+        this.geotiffs[index].remove()
+        delete this.geotiffs[index]
+        delete this.files[index]
+        this.ntiffs = this.ntiffs -1
+        this.loadedTiffs = this.loadedTiffs - 1
+        this.renderer[index] = null
+        delete this.renderer[index]
+        this.resetBounds()
+        this.afterLoad()
+        // this.renderer
         
       },
       afterLoad () {
-        var count = 0
-        this.geotiffs.forEach(function (geotiff) {
-          count++
-        })
+//         var count = 0
+//         this.geotiffs.forEach(function (geotiff) {
+//           count++
+//         })
+        console.log('after load')
         if (this.ntiffs === this.loadedTiffs) {
           this.initRasters()
           this.initDoubleRange()
@@ -692,7 +722,12 @@
             this.listControl = new L.Control.List(this, {})
             this.listControl.addTo(this.map)
           } else {
-            this.listControl.update()
+            this.listControl.update(this)
+          }
+          if (this.geotiffs.length === 0) {
+            this.listControl.remove()
+            this.listControl = null
+            this.disabled = true
           }
         }
       },
@@ -722,17 +757,17 @@
       * displayMin
       * @param String filepath file url
       */
-      loadGeotiff (ssfauche, urls, numMessage) {
+      loadGeotiff (ssfauche, url, numMessage, bigtiff) {
         this.initRenderer(ssfauche)
-        this.geotiffs[ssfauche] = L.leafletGeotiff(urls, 
-          {
-            renderer: this.renderer[ssfauche],
-            band: this.raster,
-            color: this.graphColors[ssfauche],
-           // tiff: urls.bigtiff
-           // interactive: true,
-           // bubblingMouseEvents: false
-          })
+        var options = {
+          renderer: this.renderer[ssfauche],
+          band: this.raster,
+          color: this.graphColors[ssfauche]
+        }
+        if (bigtiff) {
+          options.bigtiff = bigtiff
+        }
+        this.geotiffs[ssfauche] = L.leafletGeotiff(url, options)
         var _this = this
         this.geotiffs[ssfauche].once('load', function () {
           if (numMessage) {
@@ -748,6 +783,10 @@
         // this.renderer.setColorScale(this.colorScale)
       },
       initGeotiff (ssfauche) {
+        this.addBoundsFromGeotiff(ssfauche)
+        this.afterLoad()
+      },
+      addBoundsFromGeotiff (ssfauche) {
         var bounds = this.geotiffs[ssfauche].getBounds()
         // var count = this.geotiffs[ssfauche].getRastersCount()
         if (!this.bounds) {
@@ -755,7 +794,16 @@
         } else {
           this.bounds.extend(bounds)
         }
-        this.afterLoad()
+      },
+      resetBounds () {
+        this.bounds = null
+        var _this = this
+        this.geotiffs.forEach(function (geotiff, ssfauche) {
+          _this.addBoundsFromGeotiff(ssfauche)
+        })
+        if (!this.bounds) {
+          this.bounds = L.latLngBounds([-90, -180], [90,180])
+        }
       },
       showSsfauche (index) {
         this.geotiffs[index].rectangle.setStyle({fillOpacity: 0.3})
@@ -1132,7 +1180,7 @@
         span.innerHTML = '&#9642; '
         span.style.color = this.graphColors[index]
         var strong = L.DomUtil.create('strong', '', div)
-        strong.textContent = this.$i18n.t('sub_swath') + ' N°' + (index + 1) + ' : '
+        strong.textContent = (this.free ? this.$i18n.t('file') : this.$i18n.t('sub_swath')) + ' N°' + (index + 1) + ' : '
         var text = L.DomUtil.create('span', '', div)
         text.textContent = value.toFixed(2).replace('.', ',').replace('-', '- ')
         // Add listeners mouseover mouseout
