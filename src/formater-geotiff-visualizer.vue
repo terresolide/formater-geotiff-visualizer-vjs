@@ -434,13 +434,18 @@
       window.addEventListener('resize', this.resizeListener)
       console.log(this.token)
       console.log(this.dirurl)
+      console.log(this.jsonurl)
       if (this.token && this.dirurl) {
         this.raster = 1
+        this.free = false
         this.urlResultat = this.dirurl + this.token + '/'
         this.searchUrlTiffs()
       } else if (this.jsonurl) {
+        console.log('passe dans jsonurl')
+        this.free = false
         this.readList ()
       } else {
+        console.log('passe dans free')
         this.free = true
       }
     },
