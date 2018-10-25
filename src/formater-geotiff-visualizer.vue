@@ -210,7 +210,7 @@
                  </div>
                </div>
             </div>
-            <div class="form-group" :class="{disabled:disabled}">
+            <div class="form-group" :class="{disabled:disabled}" v-if="token || jsonurl">
               <h3 :class="extend3 ? 'extend' : ''" @click="extend3 = !extend3">{{$t('download')}}</h3>
                <div class="group-content">
                  <div class="input-group">
