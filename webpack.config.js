@@ -39,18 +39,18 @@ module.exports = {
         exclude: /node_modules/
       },
       {
-          test: /\.s[a|c]ss$/,
-          loader: 'style!css!sass'
+        test: /\.s[a|c]ss$/,
+        loader: 'style!css!sass'
       },
       {
-          test: /\.(woff(2)?|ttf|eot|svg)(\?v=\d+\.\d+\.\d+)?$/,
-          use: [{
-              loader: 'url-loader',
-              options: {
-                  limit: 10000,
-                  name: 'assets/fonts/[name].[hash:7].[ext]'
-              }
-          }]
+        test: /\.(woff(2)?|ttf|eot|svg)(\?v=\d+\.\d+\.\d+)?$/,
+        use: [{
+          loader: 'url-loader',
+          options: {
+            limit: 10000,
+            name: 'assets/fonts/[name].[hash:7].[ext]'
+          }
+        }]
       },
       {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
