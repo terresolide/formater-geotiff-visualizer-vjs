@@ -1271,7 +1271,7 @@
 
 
 <style>
- @import "./assets/css/fontello.css"; 
+
 div[id="mapTiff"] .leaflet-control-container .leaflet-top.leaflet-left{
     pointer-events:none;
 }
@@ -1397,6 +1397,7 @@ div[id="mapTiff"] .markerIcon span > span {
  }
 </style>
 <style scoped>
+  @import "./assets/css/fontello.css"; 
 /* @import "../node_modules/leaflet-draw/dist/leaflet.draw.css";
  @import "../node_modules/leaflet/dist/leaflet.css";
  @import "./assets/css/fontello.css";*/
