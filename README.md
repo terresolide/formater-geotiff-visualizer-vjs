@@ -16,7 +16,7 @@ In the body page add the component and the script like this:
 ```
 Where 
  * `jsonurl` is a json file describing your geotiff list,  (specifications @inprogress)  
- * `band` integer beginning by 1. The band to display first
+ * `band` integer beginning by 1. The band to display first (optional)
  * `lang` is the code language `fr` or `en` (optionnal)
  * `attribution` is a boolean to display or hide the attribution line  (optionnal)
 
@@ -27,8 +27,8 @@ Where
 ```
 
 Where 
- * `max-files` the maximum number of files the user can load
- * `band` integer beginning by 1. The band to display first
+ * `max-files` the maximum number of files the user can load (optional)
+ * `band` integer beginning by 1. The band to display first (optional)
  * `lang` is the code language `fr` or `en` (optionnal)
  * `attribution` is a boolean to display or hide the attribution line  (optionnal)
  
