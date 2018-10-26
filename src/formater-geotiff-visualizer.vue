@@ -314,7 +314,7 @@
       },
       band: {
         type: Number,
-        default: 0
+        default: 1
       },
       maxFiles: {
          type: Number,
@@ -432,20 +432,16 @@
       this.initMap()
       this.resizeListener = this.handleResize.bind(this)
       window.addEventListener('resize', this.resizeListener)
-      console.log(this.token)
-      console.log(this.dirurl)
-      console.log(this.jsonurl)
+
       if (this.token && this.dirurl) {
         this.raster = 1
         this.free = false
         this.urlResultat = this.dirurl + this.token + '/'
         this.searchUrlTiffs()
       } else if (this.jsonurl) {
-        console.log('passe dans jsonurl')
         this.free = false
         this.readList ()
       } else {
-        console.log('passe dans free')
         this.free = true
       }
     },
@@ -656,7 +652,6 @@
           }
         })
         if (urlsmall) {
-          var urls = {smalltiff: urlsmall, bigtiff: urlbig}
           var numMessage = this.messages.push(this.$i18n.t('loading_sub_swath', {num: number + 1}))
           this.loadGeotiff(number, urlsmall, numMessage - 1, urlbig)
         } else {
@@ -770,6 +765,7 @@
       * @param String filepath file url
       */
       loadGeotiff (ssfauche, url, numMessage, bigtiff) {
+        console.log(url)
         this.initRenderer(ssfauche)
         var options = {
           renderer: this.renderer[ssfauche],
