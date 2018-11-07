@@ -393,8 +393,6 @@
         files: [],
         currentLang: 'en',
         languageChangeListener: null,
-        receiveFileListener: null,
-        removeFileListener: null,
         free: false
       }
     },
@@ -684,6 +682,9 @@
         this.renderer[index] = null
         delete this.renderer[index]
         this.resetBounds()
+        this.removeMarkers()
+        this.optima = {min: null, max: null}
+        this.optimas = []
         this.afterLoad()
         // this.renderer
         
@@ -1241,7 +1242,7 @@
           popupAnchor: [8, -24],
           html: '<span style="background:' + this.graphColors[index] + ';"><span>' + type + '</span></span>'
         })
-        var marker = L.marker(latlng, {icon: iconMaxMin, value: value})
+        var marker = L.marker(latlng, {icon: iconMaxMin, value: value, index:index})
         var popup = this.createPopupValue(index, value, null)
         marker.bindPopup(popup)
         // this.markers[this.rasters][index][type] = marker
@@ -1256,6 +1257,12 @@
             groupLayer.remove()
           }
         })
+      },
+      removeMarkers () {
+        this.minMaxMarkers.forEach(function (groupLayer, raster) {
+          groupLayer.remove()
+        })
+        this.minMaxMarkers = []
       },
       setSelectedLayer: function (layer) {
         if (this.selectedLayer) {
