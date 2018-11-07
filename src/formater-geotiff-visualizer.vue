@@ -117,7 +117,7 @@
                <h3 :class="extend5 ? 'extend' : ''" @click="extend5 = !extend5">{{$tc('client_file', maxFiles)}}</h3>
                <div class="group-content">
                    <div class="input-group" style="margin-left:2px;">
-                     <dragdrop-file ext="tif,tiff" :lang="lang" color="#707070" :max-files="maxFiles"></dragdrop-file>
+                     <dragdrop-file ext="tif,tiff" :lang="lang" color="#707070" :max-files="maxFiles" @change="changeFiles" ></dragdrop-file>
                    </div>
                </div>
           </div>
@@ -419,10 +419,6 @@
       }
       this.languageChangeListener = this.changeLanguage.bind(this)
       document.addEventListener('languageChange', this.languageChangeListener)
-      this.receiveFileListener = this.receiveFile.bind(this)
-      document.addEventListener('receiveFile', this.receiveFileListener)
-      this.removeFileListener = this.removeFile.bind(this)
-      document.addEventListener('removeFile', this.removeFileListener)
       var event = new CustomEvent('languageRequest')
       document.dispatchEvent(event)
     },
@@ -461,11 +457,7 @@
         this.listControl = null
       }
       document.removeEventListener('languageChangeListener', this.changeLanguage)
-      this.languageChangeListener = null
-      document.removeEventListener('receiveFile', this.receiveFileListener)
-      this.receiveFileListener = null
-      document.removeEventListener('removeFile', this.removeFileListener)
-      this.removeFileListener = null     
+      this.languageChangeListener = null     
     },
     methods: {
       initDefault () {
@@ -677,13 +669,13 @@
         })
       },
       receiveFile (event) {
-        this.$set(this.files, event.detail.index, event.detail.file.name)
+        this.$set(this.files, event.index, event.file.name)
         this.ntiffs++
-        var numMessage = this.messages.push(this.$i18n.t('loading_file', {num: event.detail.index + 1}))
-        this.loadGeotiff(event.detail.index, event.detail.file, numMessage - 1, null)
+        var numMessage = this.messages.push(this.$i18n.t('loading_file', {num: event.index + 1}))
+        this.loadGeotiff(event.index, event.file, numMessage - 1, null)
       },
       removeFile (event) {
-        var index = event.detail.index
+        var index = event.index
         this.geotiffs[index].remove()
         delete this.geotiffs[index]
         delete this.files[index]
@@ -968,6 +960,17 @@
         }
         this.displayed = this.defaultRange
         this.displayedToStr = this.displayed
+      },
+      changeFiles (event) {
+        console.log(event)
+        switch(event.type) {
+        case 'add':
+          this.receiveFile(event)
+          break;
+        case 'remove':
+          this.removeFile(event);
+          break;
+        } 
       },
       changeLanguage (event) {
     	  this.currentLang = event.detail
