@@ -669,6 +669,7 @@
         
       },
       removeAllFiles() {
+        var _this = this
         this.geotiffs.forEach(function (geotiff, index) {
           geotiff.remove()
           _this.renderer[index] = null
