@@ -111,7 +111,6 @@ L.Control.ListControl = L.Control.extend({
   },
   _initContent () {
     this._removeContent()
-    console.log(this._list)
     if (this._list.length === 0) {
       return null
     }

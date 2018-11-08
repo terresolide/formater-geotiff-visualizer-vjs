@@ -733,7 +733,6 @@
       * @param String filepath file url
       */
       loadGeotiff (ssfauche, url, numMessage, bigtiff) {
-        console.log(url)
         this.initRenderer(ssfauche)
         var options = {
           renderer: this.renderer[ssfauche],
@@ -1204,7 +1203,7 @@
         span.innerHTML = '&#9642; '
         span.style.color = this.graphColors[index]
         var strong = L.DomUtil.create('strong', '', div)
-        strong.textContent = (this.free ? this.$i18n.t('file') : this.$i18n.t('sub_swath')) + ' N°' + (index + 1) + ' : '
+        strong.textContent = this.getSubswathName(index) + ' : '
         var text = L.DomUtil.create('span', '', div)
         text.textContent = value.toFixed(2).replace('.', ',').replace('-', '- ')
         // Add listeners mouseover mouseout
