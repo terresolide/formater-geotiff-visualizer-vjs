@@ -180,7 +180,7 @@
                     <li><span class="label">Maximum</span>: {{(optima.max == null) ? '--' : optima.max | number}}</li>
                   </ul>
                   <div class="formater-ssfauche-optima" v-if="optima.list && typeof value !== 'undefined'" v-for="(value, index) in optima.list" @mouseover="showSsfauche(index)" @mouseout="hideSsfauche(index)">
-                  <h5><span :style="'color: ' + graphColors[index] + ';'">&#9642;</span>{{getSubswathName(index)}}</h5>
+                  <h5><span :style="'color: ' + graphColors[index % graphColors.length] + ';'">&#9642;</span>{{getSubswathName(index)}}</h5>
                   <ul>
                     <li><span class="label">Minimum</span>: {{(value.min == null) ? '--' : value.min | number}}</li>
                     <li><span class="label">Maximum</span>: {{(value.max == null) ? '--' : value.max | number}}</li>
@@ -218,7 +218,7 @@
                    <div>
                    <ul class="list-geotiff">
                      <li v-for="(geotiff, index) in geotiffs" :key="index">
-                       <a v-if="geotiff" class="geotiff-url" :href="geotiff.options.tiff" @mouseover="showSsfauche(index)" @mouseout="hideSsfauche(index)" download>{{$t('sub_swath')}} {{index + 1}}</a>
+                       <a v-if="geotiff" class="geotiff-url" :href="geotiff.options.tiff" @mouseover="showSsfauche(index)" @mouseout="hideSsfauche(index)" download>{{getSubswathName(index)}}</a>
                     </li>
                  </ul>
                  </div>
@@ -376,7 +376,7 @@
         chart: null,
         marker: null,
         // graphColors[raster][ssfauche]
-        graphColors: ['#e67000', '#00b38f', '#751aff'],
+        graphColors: ['#e67000', '#00b38f', '#751aff', '#990033', '#31639c'],
         selectedLayer: null,
         listControl: null,
         defaultColor: '#0000FF',
@@ -624,6 +624,11 @@
             response => { _this.handleError(null, _this.$i18n.t('files_list_not_found')) }
           )
       },
+      resetOptima () {
+        this.removeMarkers()
+        this.optima = {min: null, max: null}
+        this.optimas = []
+      },
       loadFiles (response) {
         // read json that contains files list
         this.files = response.body
@@ -637,6 +642,8 @@
       receiveFile (event) {
         this.$set(this.files, event.index, event.file.name)
         this.ntiffs++
+        this.resetOptima()
+        this.closeGraph()
         var numMessage = this.messages.push(this.$i18n.t('loading_file', {name: event.file.name}))
         this.loadGeotiff(event.index, event.file, numMessage - 1, null)
       },
@@ -650,9 +657,7 @@
         this.renderer[index] = null
         delete this.renderer[index]
         this.resetBounds()
-        this.removeMarkers()
-        this.optima = {min: null, max: null}
-        this.optimas = []
+        this.resetOptima()
         this.removeChart()
         if (this.ntiffs <= 0) {
           // remove path on map
@@ -737,7 +742,7 @@
         var options = {
           renderer: this.renderer[ssfauche],
           band: this.raster,
-          color: this.graphColors[ssfauche]
+          color: this.graphColors[ssfauche % this.graphColors.length]
         }
         if (bigtiff) {
           options.bigtiff = bigtiff
@@ -1201,7 +1206,7 @@
         var div = L.DomUtil.create('div', 'formater-popup-item', container)
         var span = L.DomUtil.create('span', 'bullet', div)
         span.innerHTML = '&#9642; '
-        span.style.color = this.graphColors[index]
+        span.style.color = this.graphColors[index % this.graphColors.length]
         var strong = L.DomUtil.create('strong', '', div)
         strong.textContent = this.getSubswathName(index) + ' : '
         var text = L.DomUtil.create('span', '', div)
@@ -1254,7 +1259,7 @@
           iconAnchor: [-6, 12],
           labelAnchor: [-6, 0],
           popupAnchor: [8, -24],
-          html: '<span style="background:' + this.graphColors[index] + ';"><span>' + type + '</span></span>'
+          html: '<span style="background:' + this.graphColors[index % this.graphColors.length] + ';"><span>' + type + '</span></span>'
         })
         var marker = L.marker(latlng, {icon: iconMaxMin, value: value, index:index})
         var popup = this.createPopupValue(index, value, null)
