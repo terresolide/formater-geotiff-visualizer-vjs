@@ -36,9 +36,9 @@
       "dir_reading": "Reading subswath directory",
       "this_sub_swath_could_not_be_found": "The subswath N°{num} could not be found",
       "loading_sub_swath": "Loading subswath N°{num}",
-      "loading_file": "Loading file N°{num}",
+      "loading_file": "Loading file {name}",
       "sub_swath_loaded": "Subswath N°{num} loaded",
-      "file_loaded": "File N°{num} loaded",
+      "file_loaded": "File {name} loaded",
       "values_along_the_line": "Values along the line for the raster N°{raster}",
       "no_selected_file": "No selected file",
       "files_list_not_found": "The file list was not found",
@@ -83,9 +83,9 @@
       "dir_reading": "Lecture du dossier des sous-fauchées",
       "this_sub_swath_could_not_be_found": "La sous-fauchée N°{num} est introuvable",
       "loading_sub_swath": "Chargement de la sous-fauchée N°{num} en cours",
-      "loading_file": "Chargement du fichier N°{num} en cours",
+      "loading_file": "Chargement du fichier {name} en cours",
       "sub_swath_loaded": "Sous-fauchée N°{num} chargée",
-      "file_loaded": "Ficher N°{num} chargé",
+      "file_loaded": "Ficher {name} chargé",
       "values_along_the_line": "Valeurs le long de la ligne pour la bande N°{raster}",
       "no_selected_file": "Aucun fichier sélectionné",
       "files_list_not_found": "La liste des fichiers est introuvable",
@@ -180,7 +180,7 @@
                     <li><span class="label">Maximum</span>: {{(optima.max == null) ? '--' : optima.max | number}}</li>
                   </ul>
                   <div class="formater-ssfauche-optima" v-if="optima.list && typeof value !== 'undefined'" v-for="(value, index) in optima.list" @mouseover="showSsfauche(index)" @mouseout="hideSsfauche(index)">
-                  <h5><span :style="'color: ' + graphColors[index] + ';'">&#9642;</span>{{free ? $t('file') : $t('sub_swath')}} N°{{index + 1}}</h5>
+                  <h5><span :style="'color: ' + graphColors[index] + ';'">&#9642;</span>{{getSubswathName(index)}}</h5>
                   <ul>
                     <li><span class="label">Minimum</span>: {{(value.min == null) ? '--' : value.min | number}}</li>
                     <li><span class="label">Maximum</span>: {{(value.max == null) ? '--' : value.max | number}}</li>
@@ -554,39 +554,7 @@
         this.marker.addTo(this.map)
         this.marker.setOpacity(0)
       },
-      layerToChart (layer) {
-        // pour le moment on recalcule à chaque fois
-        // même quand on change de raster et qu'on a déjà les valeurs
-        // du coup, on écrase à chaque fois les anciennes valeurs
-        var edges = layer.stitchEdges()
-        var values = layer.getValues()
-        var bounds = []
-        this.geotiffs.forEach(function (geotiff, ssfauche) {
-          bounds[ssfauche] = geotiff.getBounds()
-        })
-        var _this = this
-        edges.forEach(function (edge) {
-          edge.forEach(function (latlng) {
-            _this.geotiffs.forEach(function (geotiff, ssfauche) {
-              if (!latlng.value) {
-                latlng.value = []
-              }
-              if (!latlng.value[_this.raster]) {
-                latlng.value[_this.raster] = []
-              }
-           // on controle que bien dans les bounds, sinon on met 0 comme valeur
-              if (bounds[ssfauche].contains([latlng.lat, latlng.lng])) {
-                var value = geotiff.getValueAtLatLng(latlng.lat, latlng.lng)
-                latlng.value[_this.raster][ssfauche] = value
-              } else {
-                // latlng.value[_this.raster][ssfauche] = 0
-              }
-              values.push(latlng)
-            })
-          })
-        })
-        layer.setValues(values)
-      },
+     
       searchUrlTiffs () {
         this.messages.push(this.$i18n.t('searching'))
         this.playing = true
@@ -669,7 +637,7 @@
       receiveFile (event) {
         this.$set(this.files, event.index, event.file.name)
         this.ntiffs++
-        var numMessage = this.messages.push(this.$i18n.t('loading_file', {num: event.index + 1}))
+        var numMessage = this.messages.push(this.$i18n.t('loading_file', {name: event.file.name}))
         this.loadGeotiff(event.index, event.file, numMessage - 1, null)
       },
       removeFile (event) {
@@ -685,6 +653,13 @@
         this.removeMarkers()
         this.optima = {min: null, max: null}
         this.optimas = []
+        this.removeChart()
+        if (this.ntiffs <= 0) {
+          // remove path on map
+          if (this.mode === 'profile') {
+			this.editableLayers.clearLayers() 
+          }
+        }
         this.afterLoad()
         // this.renderer
         
@@ -772,7 +747,8 @@
         var _this = this
         this.geotiffs[ssfauche].once('load', function () {
           if (numMessage) {
-            _this.changeMessage(numMessage, _this.$i18n.t('sub_swath_loaded', {num: ssfauche + 1}))
+            
+            _this.changeMessage(numMessage, _this.getSubswathName(ssfauche))
            }
           _this.loadedTiffs += 1
           _this.initGeotiff(ssfauche)
@@ -815,6 +791,13 @@
       chartWidth () {
         return  this.$el.querySelector('#mapTiff').offsetWidth * 0.8 - 50
       },
+      getSubswathName (index) {
+        if (this.free) {
+         return this.files[index]
+        } else {
+         return this.$i18n.t('sub_swath') + '' + (index + 1)
+        }
+      },
       createChart (layer) {
         this.hasChart = true
         var container = this.$el.querySelector('#chart')
@@ -826,7 +809,7 @@
         this.geotiffs.forEach(function (geotiff, ssfauche) {
           var data = layer.prepareData(_this.raster, ssfauche)
           var serie = {
-            name: _this.$i18n.t('sub_swath') + '' + (ssfauche + 1),
+            name: _this.getSubswathName(ssfauche),
             color: _colors[ssfauche],
             data: data
           }
@@ -899,6 +882,48 @@
           series: series
         })
       },
+      layerToChart (layer) {
+        // pour le moment on recalcule à chaque fois
+        // même quand on change de raster et qu'on a déjà les valeurs
+        // du coup, on écrase à chaque fois les anciennes valeurs
+        var edges = layer.stitchEdges()
+        var values = layer.getValues()
+        var bounds = []
+        this.geotiffs.forEach(function (geotiff, ssfauche) {
+          bounds[ssfauche] = geotiff.getBounds()
+        })
+        var _this = this
+        edges.forEach(function (edge) {
+          edge.forEach(function (latlng) {
+            _this.geotiffs.forEach(function (geotiff, ssfauche) {
+              if (!latlng.value) {
+                latlng.value = []
+              }
+              if (!latlng.value[_this.raster]) {
+                latlng.value[_this.raster] = []
+              }
+           // on controle que bien dans les bounds, sinon on met 0 comme valeur
+              if (bounds[ssfauche].contains([latlng.lat, latlng.lng])) {
+                var value = geotiff.getValueAtLatLng(latlng.lat, latlng.lng)
+                latlng.value[_this.raster][ssfauche] = value
+              } else {
+                // latlng.value[_this.raster][ssfauche] = 0
+              }
+              values.push(latlng)
+            })
+          })
+        })
+        layer.setValues(values)
+      },
+      removeChart () {
+        // remove chart
+        for (var i = 0; i < Highcharts.charts.length; i++) {
+          if (typeof Highcharts.charts[i] !== 'undefined') {
+            Highcharts.charts[i].destroy()
+          }
+        }
+        this.closeGraph()
+      },
       closeGraph () {
         this.hasChart = false
         this.marker.setOpacity(0)
@@ -963,7 +988,6 @@
         this.displayedToStr = this.displayed
       },
       changeFiles (event) {
-        console.log(event)
         switch(event.type) {
         case 'add':
           this.receiveFile(event)
@@ -1032,13 +1056,7 @@
           case 'point':
             this.editableLayers.remove()
             this.drawControl.remove()
-            // remove chart
-            for (var i = 0; i < Highcharts.charts.length; i++) {
-              if (typeof Highcharts.charts[i] !== 'undefined') {
-                Highcharts.charts[i].destroy()
-              }
-            }
-            this.closeGraph()
+            this.removeChart()
             break
           case 'profile':
             var map = this.map
@@ -1046,15 +1064,14 @@
             this.editableLayers.addTo(map)
             var _this = this
             var count = 0
-            this.editableLayers.eachLayer(function (layer) {
+             this.editableLayers.eachLayer(function (layer) {
               layer.on('click', function (e) {
                 if (_this.status === 'FREE') {
-                  console.log('affiche le profile')
                   // var data = this.prepareData(_this.raster)
                   _this.createChart(this)
                 }
               })
-            })
+            }) 
             this.drawControl.addTo(map)
             this.marker.setOpacity(0)
             this.editableLayers.bringToFront()
@@ -1145,9 +1162,7 @@
         })
         this.geotiffs = []
         if (this.editableLayers) {
-          this.editableLayers.each(function (layer) {
-            this.removeLayer(layer)
-          })
+          this.editableLayers.clearLayers()
         }
         this.resetForm()
         this.disabled = true
