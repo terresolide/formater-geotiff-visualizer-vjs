@@ -442,9 +442,9 @@
     destroyed () {
       window.removeEventListener('resize', this.resizeListener)
       this.resizeListener = null
-      this.editableLayers.eachLayer(function (layer) {
-        layer.remove()
-      })
+      document.removeEventListener('languageChangeListener', this.changeLanguage)
+      this.languageChangeListener = null
+      this.removeAllFiles();
       this.editableLayers = null
       if (this.drawControl) {
         this.drawControl.remove()
@@ -454,8 +454,7 @@
         this.listControl.remove()
         this.listControl = null
       }
-      document.removeEventListener('languageChangeListener', this.changeLanguage)
-      this.languageChangeListener = null     
+     
     },
     methods: {
       initDefault () {
@@ -668,6 +667,21 @@
         this.afterLoad()
         // this.renderer
         
+      },
+      removeAllFiles() {
+        this.geotiffs.forEach(function (geotiff, index) {
+          geotiff.remove()
+          _this.renderer[index] = null
+        })
+        this.geotiffs = []
+        this.renderer = []
+        this.files = []
+        this.ntiffs = 0
+        this.loadedTiffs = 0
+        this.resetBounds()
+        this.resetOptima()
+        this.removeChart()
+        this.editableLayers.clearLayers()
       },
       afterLoad () {
 //         var count = 0
@@ -1256,9 +1270,9 @@
       addMaxMinMarker (index, latlng, value, type) {
         var iconMaxMin = L.divIcon({
           className: 'markerIcon',
-          iconAnchor: [-6, 12],
+          iconAnchor: [12, 30],
           labelAnchor: [-6, 0],
-          popupAnchor: [8, -24],
+          popupAnchor: [2, -24],
           html: '<span style="background:' + this.graphColors[index % this.graphColors.length] + ';"><span>' + type + '</span></span>'
         })
         var marker = L.marker(latlng, {icon: iconMaxMin, value: value, index:index})
@@ -1410,20 +1424,20 @@ div[id="mapTiff"] .markerIcon {
    font-size:12px;
 }
 div[id="mapTiff"] .markerIcon span{
-  width: 2em;
-  height: 2em;
+  width: 24px;
+  height: 24px;
   display: block;
-  left: -1em;
-  top: -1em;
+  left: 0px;
+  top: 0px;
   position: relative;
   padding: 2px;
   color:#fff;
   text-align: center;
-  border-radius: 2em 2em 0;
+  border-radius: 24px 24px 0;
   transform: rotate(45deg);
  }
 div[id="mapTiff"] .markerIcon span > span {
-   transform: rotate(-45deg) translate(0, 1.2em);
+   transform: rotate(-45deg);
  }
 </style>
 <style scoped>
