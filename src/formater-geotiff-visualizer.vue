@@ -117,7 +117,7 @@
                <h3 :class="extend5 ? 'extend' : ''" @click="extend5 = !extend5">{{$tc('client_file', maxFiles)}}</h3>
                <div class="group-content">
                    <div class="input-group" style="margin-left:2px;">
-                     <dragdrop-file ext="tif,tiff" :lang="lang" color="#707070" :max-files="maxFiles" @change="changeFiles" ></dragdrop-file>
+                     <dragdrop-file ext="tif,tiff" :lang="currentLang" color="#707070" :max-files="maxFiles" @change="changeFiles" ></dragdrop-file>
                    </div>
                </div>
           </div>
