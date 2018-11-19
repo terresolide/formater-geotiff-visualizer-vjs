@@ -10,7 +10,7 @@ A webcomponent to visualize your geotiff file
 In the body page add the component and the script like this:
 
 ### To display a list of geotiff
-```js
+```html
 <geotiff-visualizer jsonurl="url_to_json" lang="en" band="2"></geotiff-visualizer>
 <script src="https://url_to/formater-geotiff-visualizer-vjs.js"></script>
 ```
@@ -21,7 +21,7 @@ Where
  * `attribution` is a boolean to display or hide the attribution line  (optionnal)
 
  ### To display the interface with a file input area
- ```
+ ```html
 <geotiff-visualizer max-files="3" band="2"></geotiff-visualizer>
 <script src="https://url_to/formater-geotiff-visualizer-vjs.js"></script>
 ```
