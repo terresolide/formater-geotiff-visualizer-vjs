@@ -10,8 +10,8 @@ A webcomponent to visualize your geotiff file
 In the body page add the component and the script like this:
 
 ### To display a list of geotiff
-```
-<geotiff-visualizer jsonurl='url_to_json' lang="en" band="2"></geotiff-visualizer>
+```js
+<geotiff-visualizer jsonurl="url_to_json" lang="en" band="2"></geotiff-visualizer>
 <script src="https://url_to/formater-geotiff-visualizer-vjs.js"></script>
 ```
 Where 
