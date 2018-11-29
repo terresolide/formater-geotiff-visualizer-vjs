@@ -26,7 +26,7 @@ var drawLocal = {
       buttons: {
         polyline: 'Dessiner une ligne brisée en cliquant sur l\'image',
         polygon: 'Draw a polygon',
-        rectangle: 'Draw a rectangle',
+        rectangle: 'Dessiner un rectangle',
         circle: 'Draw a circle',
         marker: 'Draw a marker',
         circlemarker: 'Draw a circlemarker'
@@ -66,12 +66,12 @@ var drawLocal = {
       },
       rectangle: {
         tooltip: {
-          start: 'Click and drag to draw rectangle.'
+          start: 'Cliquez et déplacez la souris pour dessiner le rectangle.'
         }
       },
       simpleshape: {
         tooltip: {
-          end: 'Release mouse to finish drawing.'
+          end: 'Levez la souris pour terminer.'
         }
       }
     }
