@@ -605,10 +605,14 @@
             var bigtiff = link.getAttribute('href').match(/.*.tif{1,2}/)
             if (bigtiff) {
               urlbig = url + link.getAttribute('href')
-            }
+            } 
           }
+          
         })
         if (urlsmall) {
+          if (!urlbig) {
+            urlbig = urlsmall
+          }
           var numMessage = this.messages.push(this.$i18n.t('loading_sub_swath', {num: number + 1}))
           this.loadGeotiff(number, urlsmall, numMessage - 1, urlbig)
         } else {
@@ -760,7 +764,7 @@
           color: this.graphColors[ssfauche % this.graphColors.length]
         }
         if (bigtiff) {
-          options.bigtiff = bigtiff
+          options.tiff = bigtiff
         }
         this.geotiffs[ssfauche] = L.leafletGeotiff(url, options)
         var _this = this
