@@ -241,8 +241,8 @@
                       <div><a :href="dirurl+token" target="_blank"> {{dirurl}}{{token}}</a></div>
                  </div>
                  <div class="input-group" v-for="(item,index) in infos">
-                   <label>{{index}}:</label>
-                   <span>{{item}}</span>
+                   <label>{{item.name}}:</label>
+                   <span>{{item.value}}</span>
                  </div>
               </div>
             </div>
