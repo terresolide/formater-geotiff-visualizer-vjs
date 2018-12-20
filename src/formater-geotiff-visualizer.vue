@@ -45,7 +45,8 @@
       "component": "Component",
       "no_subswath": "No subswath found with this token",
       "subswath_not_found": "subswath N° {num} not found",
-      "no_subswath_found": "No subswath found!"
+      "no_subswath_found": "No subswath found!",
+      "result_directory": "Result directory"
     },
     "fr": {
       "parameters_and_search": "Paramètres et recherche",
@@ -92,7 +93,8 @@
       "component": "Composant",
       "no_subswath": "Aucun sous-fauchée trouvée pour ce token",
       "subswath_not_found": "Sous-fauchée N° {num} introuvable",
-      "no_subswath_found": "Aucune sous-fauchée trouvée!"
+      "no_subswath_found": "Aucune sous-fauchée trouvée!",
+      "result_directory": "Répertoire des résultats"
     }
   }
 </i18n>
