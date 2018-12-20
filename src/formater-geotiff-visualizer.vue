@@ -235,11 +235,12 @@
               <h3 :class="extend4 ? 'extend' : ''" @click="extend4 = !extend4">INFOS</h3>
                <div class="group-content">
                  <div class="input-group">
-                   <h4>Process Instance {{this.idProcess}}</h4>
+                      <label>{{$t('result_directory')}}:</label>
+                      <div><a :href="dirurl+token" target="_blank"> {{dirurl}}{{token}}</a></div>
                  </div>
-                 <div class="input-group">
-                    <h4>Résultat</h4>
-                      <span class="blue" v-on:click="openWindow()"> {{this.dirurl}}{{this.token}}</span>
+                 <div class="input-group" v-for="(item,index) in infos">
+                   <label>{{index}}:</label>
+                   <span>{{item}}</span>
                  </div>
               </div>
             </div>
@@ -319,6 +320,10 @@
       maxFiles: {
          type: Number,
          default: 3
+      },
+      infos: {
+         type: Object,
+         default: {}
       }
     },
     data () {
@@ -381,7 +386,6 @@
         listControl: null,
         defaultColor: '#0000FF',
         selectedColor: '#ff0000',
-        idProcess: '',
         processToken: '',
         urlResultat: '',
         bounds: null,
@@ -1310,9 +1314,6 @@
         if (layer) {
           this.selectedLayer.setStyle({color: this.selectedColor})
         }
-      },
-      openWindow: function () {
-        window.open('https://ist-etalab.u-ga.fr/etalab/data/' + this.processToken)
       }
     }
   }
@@ -1760,6 +1761,13 @@ div[id="mapTiff"] .markerIcon span > span {
     color: #999;
     pointer-events: none;
   }
-
+  .geotiff-viewer .input-group label{
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size:0.8em;
+  }
+   .geotiff-viewer .input-group label + span{
+    font-size:0.9em;
+  }
 
 </style>
