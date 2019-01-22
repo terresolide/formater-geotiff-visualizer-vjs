@@ -324,8 +324,8 @@
          default: 3
       },
       infos: {
-         type: Object,
-         default: {}
+         type: Array,
+         default: []
       }
     },
     data () {
@@ -763,6 +763,21 @@
       * @param String filepath file url
       */
       loadGeotiff (ssfauche, url, numMessage, bigtiff) {
+        // search date begin and date end
+        var pattern = /([0-9}]{8})\-([0-9]{8})/
+        var match = url.match(pattern)
+        var dates = {}
+        function toDate (str) {
+          return str.substr(0,4)+'-' + str.substr(4,2) + '-' + str.substr(6,2)
+        }
+        if (match.length > 2) {
+          var dates = {
+              begin: toDate(match[1]),
+              end: toDate(match[2])
+          }
+        }
+        console.log(dates)
+        // end dates
         this.initRenderer(ssfauche)
         var options = {
           renderer: this.renderer[ssfauche],
