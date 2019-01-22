@@ -233,12 +233,16 @@
                  </div>
               </div>
             </div>
-            <div class="form-group" v-if="dirurl">
+            <div class="form-group" v-if="dirurl || temporal">
               <h3 :class="extend4 ? 'extend' : ''" @click="extend4 = !extend4">INFOS</h3>
                <div class="group-content">
-                 <div class="input-group">
+                 <div class="input-group" v-if="dirurl">
                       <label>{{$t('result_directory')}}:</label>
                       <div><a :href="dirurl+token" target="_blank"> {{dirurl}}{{token}}</a></div>
+                 </div>
+                 <div class="input-group" v-if="temporal">
+                      <label>Dates:</label>
+                      <div>["{{temporal.begin}}", "{{temporal.end}}"]</div>
                  </div>
                  <div class="input-group" v-for="(item,index) in infos">
                    <label>{{item.name}}:</label>
@@ -325,7 +329,7 @@
       },
       infos: {
          type: Array,
-         default: []
+         default: () => []
       }
     },
     data () {
@@ -399,7 +403,8 @@
         files: [],
         currentLang: 'en',
         languageChangeListener: null,
-        free: false
+        free: false,
+        temporal: null
       }
     },
      watch: {
@@ -766,17 +771,16 @@
         // search date begin and date end
         var pattern = /([0-9}]{8})\-([0-9]{8})/
         var match = url.match(pattern)
-        var dates = {}
         function toDate (str) {
           return str.substr(0,4)+'-' + str.substr(4,2) + '-' + str.substr(6,2)
         }
         if (match.length > 2) {
-          var dates = {
+          this.temporal = {
               begin: toDate(match[1]),
               end: toDate(match[2])
           }
         }
-        console.log(dates)
+        console.log(this.temporal)
         // end dates
         this.initRenderer(ssfauche)
         var options = {
