@@ -110,6 +110,10 @@
             <div v-html="alert.html"></div>
           </div>
       </div> -->
+      <header style="position:relative;"v-if="header">
+      <a style="float:right;margin-right:10px;" :href="header.html" target="_blank"><img :src="header.badge" /></a>
+      <h1 style="margin:0">{{header.title}}</h1>
+      </header>
       <div id="form"  style="position:relative;">
        <formater-attribution :lang="currentLang" :name="$t('component')" color="#000000" linkcolor="#8c0209" position="BL" url="https://github.com/terresolide/formater-geotiff-visualizer-vjs" v-if="attribution"></formater-attribution>
       <div class="form-content">
@@ -233,7 +237,7 @@
                  </div>
               </div>
             </div>
-            <div class="form-group" v-if="dirurl || temporal">
+            <div class="form-group" v-if="dirurl || temporal || zenodo">
               <h3 :class="extend4 ? 'extend' : ''" @click="extend4 = !extend4">INFOS</h3>
                <div class="group-content">
                  <div class="input-group" v-if="dirurl">
@@ -244,7 +248,11 @@
                       <label>Dates:</label>
                       <div>["{{temporal.begin}}", "{{temporal.end}}"]</div>
                  </div>
-                 <div class="input-group" v-for="(item,index) in infos">
+                 <div class="input-group" v-for="(item, index) in infos" v-if="zenodo">
+                   <label>{{index}}</label>
+                   <span>{{item}}</span>
+                 </div>
+                 <div class="input-group" v-for="(item,index) in infos" v-else>
                    <label>{{item.name}}:</label>
                    <span>{{item.value}}</span>
                  </div>
@@ -270,12 +278,11 @@
 
 <script>
 /* eslint no-unused-vars: "off" */
+  import config from './config.js'
   var L = require('./module/leaflet.extends.js')
   import FormaterDoubleRange from './elements/formater-double-range.vue'
   import {FormaterAlertMessage, FormaterAttribution, DragdropFile} from 'formater-commons-components-vjs'
   require('leaflet-draw')
-
-
   var plotty = require('plotty')
 
   let icon = new L.Icon({
@@ -304,6 +311,10 @@
         default: 'en'
       },
       jsonurl: {
+        type: String,
+        default: null
+      },
+      zenodo: {
         type: String,
         default: null
       },
@@ -404,7 +415,8 @@
         currentLang: 'en',
         languageChangeListener: null,
         free: false,
-        temporal: null
+        temporal: null,
+        title: null
       }
     },
      watch: {
@@ -445,7 +457,9 @@
         this.searchUrlTiffs()
       } else if (this.jsonurl) {
         this.free = false
-        this.readList ()
+        this.readList (this.jsonurl, true)
+      } else if (this.zenodo){
+        this.readList (config.zenodoApi + this.zenodo, false)
       } else {
         this.free = true
       }
@@ -631,26 +645,52 @@
         	this.changeMessage(number, this.$i18n.t('subswath_not_found', {num: number + 1}))
         }
       },
-      readList () {
+      readList (url, custom) {
         var _this = this
-        this.$http.get(this.jsonurl).then(
-            response => { _this.loadFiles(response) },
+        this.$http.get(url).then(
+            response => { _this.loadFiles(response, custom) },
             response => { _this.handleError(null, _this.$i18n.t('files_list_not_found')) }
           )
       },
+  
       resetOptima () {
         this.removeMarkers()
         this.optima = {min: null, max: null}
         this.optimas = []
       },
-      loadFiles (response) {
-        // read json that contains files list
-        this.files = response.body
+      loadFiles (response, custom) {
+        if (custom) {
+          // read json that contains files list
+          this.files = response.body
+        } else {
+         // console.log(response.body)
+          this.extractZenodoData(response.body)
+        }
         var _this = this
         this.ntiffs = this.files.length
         this.files.forEach(function (file, number) {
           var numMessage = _this.messages.push(_this.$i18n.t('loading_sub_swath', {num: number + 1}))
           _this.loadGeotiff(number, file.smalltiff, numMessage - 1, file.bigtiff)
+        })
+      },
+      extractZenodoData (data) {
+        this.infos = data.metadata
+        this.header = {}
+        this.header.title = data.title
+        for(var item in data.links) {
+          switch(item) {
+          case 'badge':
+          case 'html':
+            console.log(item)
+             this.header[item] = data.links[item]
+          } 
+        }
+        data.files.forEach(function (file) {
+          //@todo
+        })
+        this.files.push({
+            smalltiff: 'https://sandbox.zenodo.org/api/files/5de813f8-bfca-4425-9d50-27d21d3addbf/GDM_geo_20170627-20170703_sd_era_atmo_4rlks.unw.tiff',
+            bigtiff: 'https://sandbox.zenodo.org/api/files/5de813f8-bfca-4425-9d50-27d21d3addbf/GDM_geo_20170627-20170703_sd_era_atmo_4rlks.unw.tiff'
         })
       },
       receiveFile (event) {
