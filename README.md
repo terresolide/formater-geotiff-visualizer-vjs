@@ -33,5 +33,8 @@ Where
  * `attribution` is a boolean to display or hide the attribution line  (optionnal)
  
 ### 2 optional props specific to our app:
+#### Before publication
  * `token` 
  * `dirurl` is the dir url where are listed subswath 
+#### After publication
+ * `zenodo` the record identifier in zenodo plateform
