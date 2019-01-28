@@ -609,7 +609,7 @@
         var urlsmall = null
         var urlbig = null
         links.forEach(function (link) {
-          var smalltif = link.getAttribute('href').match(/.*_small.tif{1,2}/)
+         var smalltif = link.getAttribute('href').match(/.*_small.tif{1,2}/)
           if (smalltif) {
             urlsmall = url + link.getAttribute('href')
           } else {
