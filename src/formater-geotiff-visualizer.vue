@@ -686,7 +686,7 @@
           } 
         }
         data.files.forEach(function (file) {
-          //@todo
+          //@todo peut-être si les fichiers sont trop lourds
         })
         this.files.push({
             smalltiff: 'https://sandbox.zenodo.org/api/files/5de813f8-bfca-4425-9d50-27d21d3addbf/GDM_geo_20170627-20170703_sd_era_atmo_4rlks.unw.tiff',
