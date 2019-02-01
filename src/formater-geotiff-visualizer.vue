@@ -248,11 +248,11 @@
                       <label>Dates:</label>
                       <div>["{{temporal.begin}}", "{{temporal.end}}"]</div>
                  </div>
-                 <div class="input-group" v-for="(item, index) in infos" v-if="zenodo">
+                 <div class="input-group" v-for="(item, index) in metadata" v-if="zid">
                    <label>{{index}}</label>
                    <span>{{item}}</span>
                  </div>
-                 <div class="input-group" v-for="(item,index) in infos" v-else>
+                 <div class="input-group" v-for="(item,index) in metadata" v-else>
                    <label>{{item.name}}:</label>
                    <span>{{item.value}}</span>
                  </div>
@@ -416,7 +416,10 @@
         languageChangeListener: null,
         free: false,
         temporal: null,
-        title: null
+        title: null,
+        metadata: [],
+        header: {},
+        zid: null
       }
     },
      watch: {
@@ -435,6 +438,7 @@
       this.raster = this.band - 1
       this.currentLang = this.lang
       this.$i18n.locale = this.lang
+      this.metadata = this.infos
       if (this.lang === 'fr') {
         L.drawLocal = require('./module/leaflet.draw.fr.js')
       }
@@ -458,10 +462,17 @@
       } else if (this.jsonurl) {
         this.free = false
         this.readList (this.jsonurl, true)
-      } else if (this.zenodo){
+      } else if (this.zenodo ){
+        this.zid = this.zenodo
         this.readList (config.zenodoApi + this.zenodo, false)
       } else {
-        this.free = true
+        var url = new URL(window.location.href)
+        this.zid = url.searchParams.get('zid')
+        if (this.zid) {
+          this.readList(config.zenodoApi + this.zid, false)
+        } else {
+          this.free = true
+        }
       }
     },
     destroyed () {
@@ -674,7 +685,7 @@
         })
       },
       extractZenodoData (data) {
-        this.infos = data.metadata
+        this.metadata = data.metadata
         this.header = {}
         this.header.title = data.title
         for(var item in data.links) {
