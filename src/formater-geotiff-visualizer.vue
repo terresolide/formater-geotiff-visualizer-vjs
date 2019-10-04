@@ -844,7 +844,7 @@
         }
         this.geotiffs[ssfauche] = L.leafletGeotiff(url, options)
         var _this = this
-        this.geotiffs[ssfauche].once('load', function () {
+        this.geotiffs[ssfauche].once('parsed', function () {
           if (numMessage) {
             
             _this.changeMessage(numMessage, _this.getSubswathName(ssfauche))

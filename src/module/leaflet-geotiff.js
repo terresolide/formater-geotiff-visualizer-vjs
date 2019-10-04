@@ -120,6 +120,7 @@ L.LeafletGeotiff = L.ImageOverlay.extend({
       this.rastersCount = meta.SamplesPerPixel
       this._rasterBounds = L.latLngBounds([[yMin, xMin], [yMax, xMax]])
       this._reset()
+      this.fire('parsed')
     }
   },
   _computeRange: function () {
