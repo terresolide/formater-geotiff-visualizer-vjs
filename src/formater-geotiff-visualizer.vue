@@ -1559,6 +1559,7 @@ div[id="mapTiff"] .markerIcon span > span {
     position:relative;
     height: 100%;
     box-sizing: border-box;
+    z-index:0;
   }
   div[id="mapTiff"] div.map {
     position: absolute;
