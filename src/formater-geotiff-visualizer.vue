@@ -110,10 +110,10 @@
             <div v-html="alert.html"></div>
           </div>
       </div> -->
-      <header style="position:relative;"v-if="header">
+     <!--   <header style="position:relative;" v-if="header !== {}">
       <a style="float:right;margin-right:10px;" :href="header.html" target="_blank"><img :src="header.badge" /></a>
       <h1 style="margin:0">{{header.title}}</h1>
-      </header>
+      </header> -->
       <div id="form"  style="position:relative;">
        <formater-attribution :lang="currentLang" :name="$t('component')" color="#000000" linkcolor="#8c0209" position="BL" url="https://github.com/terresolide/formater-geotiff-visualizer-vjs" v-if="attribution"></formater-attribution>
       <div class="form-content">
