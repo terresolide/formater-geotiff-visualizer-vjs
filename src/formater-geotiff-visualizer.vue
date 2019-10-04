@@ -278,7 +278,7 @@
 
 <script>
 /* eslint no-unused-vars: "off" */
-  import config from './config.js'
+ // import config from './config.js'
   var L = require('./module/leaflet.extends.js')
   import FormaterDoubleRange from './elements/formater-double-range.vue'
   import {FormaterAlertMessage, FormaterAttribution, DragdropFile} from 'formater-commons-components-vjs'
