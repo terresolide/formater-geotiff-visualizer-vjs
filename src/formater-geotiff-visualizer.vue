@@ -680,8 +680,12 @@
         var _this = this
         this.ntiffs = this.files.length
         this.files.forEach(function (file, number) {
+          if (file.smalltiff) {
           var numMessage = _this.messages.push(_this.$i18n.t('loading_sub_swath', {num: number + 1}))
           _this.loadGeotiff(number, file.smalltiff, numMessage - 1, file.bigtiff)
+          } else {
+            _this.loadedTiffs += 1
+          }
         })
       },
       extractZenodoData (data) {
@@ -1620,12 +1624,12 @@ div[id="mapTiff"] .markerIcon span > span {
    color:grey;
  }
  .geotiff-viewer h3::before{
-   content: "\23F5";
+   content: "\25B6";
    font-size:1.2em;
    padding-right: 5px;
  }
  h3.extend::before{
-   content: "\23F7";
+   content: "\25BC";
  }
  h3 + .group-content{
    max-height:0px;
